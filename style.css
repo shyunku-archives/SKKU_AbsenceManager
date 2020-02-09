@@ -1,0 +1,17 @@
+body{
+}
+
+#body_content{
+    width: 1300px;
+    height: 350px;
+    background-color: red;
+}
+
+#side_menu{
+    position: fixed;
+    width: 400px;
+    height: 100%;
+    top: 0;
+    left: -400px;
+    background-color: black;
+}
