@@ -2,6 +2,8 @@
 <html>
     <head>
         <title>출첵 현황</title>
+        <link href="https://fonts.googleapis.com/css?family=Do+Hyeon|Teko:300&display=swap&subset=korean" rel="stylesheet">
+        <link rel="stylesheet" href="reset.css">
         <link rel="stylesheet" href="style.css">
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
@@ -10,13 +12,27 @@
     <body>
         <div id="body_content">
             <div id="main_banner">
-
+                <div class="main-subject-info-wrapper">
+                    <span class="main-subject-name">오픈소스소프트웨어실습</span>
+                    <span class="main-subject-professor">서의성 교수님</span>
+                    <span class="main-subject-room light-font">23219</span>
+                </div>
+                <div class="main-subject-absence-summary-wrapper">
+                    <span>현재까지 </span>
+                    <span class="absence-num">5</span>
+                    <span>번 결석했습니다.</span>
+                    <span>(13/18)</span>
+                </div>
+                <div id="absence_canvas_wrapper">
+                    <canvas id="absence_status_canvas"></canvas>
+                </div>
             </div>
             <div id="subject_summary_list_wrapper">
 
             </div>
         </div>
-        <div id="side_menu" class="fff active">
+        <div id="side_menu" class="active">
         </div>
+        <button id="side_menu_opener">menu</div>
     </body>
 </html>

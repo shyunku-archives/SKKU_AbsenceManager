@@ -1,10 +1,15 @@
 body{
+    text-align: center;
+    background-color: #222;
+    color: white;
+    font-family: 'Do Hyeon', sans-serif;
 }
 
 #body_content{
+    display: inline-block;
     width: 1300px;
     height: 350px;
-    background-color: red;
+    background-color: #444;
 }
 
 #side_menu{
@@ -14,4 +19,69 @@ body{
     top: 0;
     left: -400px;
     background-color: black;
+}
+
+.light-font{
+    font-family: 'Teko', sans-serif;
+}
+
+#main_banner{
+    text-align: left;
+    padding: 15px 30px;
+}
+
+.main-subject-info-wrapper{
+    position: relative;
+    text-align: left;
+    
+    /* background-color: red; */
+    vertical-align: top;
+}
+
+.main-subject-name{
+    font-size: 90px;
+}
+
+.main-subject-professor{
+    font-size: 30px;
+}
+
+.main-subject-room{
+    display: inline-block;
+    position: absolute;
+    right: 15px;
+    font-size: 110px;
+    color: rgb(121, 121, 121);
+}
+
+.main-subject-absence-summary-wrapper{
+    display: inline-block;
+    padding: 10px 0;
+}
+
+.main-subject-absence-summary-wrapper span{
+    text-align: left;
+    font-size: 40px;
+}
+
+.main-subject-absence-summary-wrapper .absence-num{
+    color: rgb(255, 118, 118);
+}
+
+#absence_canvas_wrapper{
+    margin-top: 15px;
+    width: 100%;
+    height: 100px;
+}
+
+#absence_status_canvas{
+    width: 100%;
+    height: 100%;
+    /* background-color: black; */
+}
+
+#side_menu_opener{
+    position: fixed;
+    top: 30px;
+    right: 30px;
 }
