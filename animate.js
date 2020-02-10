@@ -43,8 +43,8 @@ function slideMenu(){
 function drawCanvas(){
     drawBar("gray", 0, 1);
     //TEST
-    drawBar("rgb(0, 255, 0)", 0, 0.3);
-    drawBar("rgb(255, 255, 0)", 0.3, 0.8);
+    drawBar("rgb(0, 255, 0)", 0, 0.4);
+    drawBar("rgb(255, 255, 0)", 0.4, 0.8);
     drawBar("rgb(255, 0, 0)", 0.8, 1);
 
     drawCursor(0.23);

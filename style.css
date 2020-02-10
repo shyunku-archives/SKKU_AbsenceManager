@@ -1,3 +1,7 @@
+:root{
+    --attendance-text-shadow-size: 8px;
+}
+
 body{
     text-align: center;
     background-color: #222;
@@ -20,8 +24,12 @@ body{
     background-color: black;
 }
 
-.light-font{
+.narrow-font{
     font-family: 'Teko', sans-serif;
+}
+
+.content-font{
+    font-family: 'Noto Sans', sans-serif;
 }
 
 #main_banner{
@@ -51,7 +59,7 @@ body{
     position: absolute;
     top: 0;
     right: 0;
-    font-size: 110px;
+    font-size: 100px;
     color: rgb(121, 121, 121);
 }
 
@@ -99,14 +107,17 @@ body{
     display: inline-block;
     margin: 5px 0;
     width: 100%;
-    height: 200px;
     padding: 10px;
     box-sizing: border-box;
-    border: 1px solid white;
+    /* border: 1px solid white; */
+    background-color: rgb(78, 78, 78);
+    /* box-shadow: rgba(255, 255, 255, 0.253) 0 0 8px 8px inset; */
 }
 
-.subject-item-info{
-    /* background-color: rgb(87, 87, 0); */
+.next-class-timestamp{
+    font-size: 50px;
+    float: right;
+    color: rgb(255, 0, 0);
 }
 
 .subject-item-name{
@@ -117,11 +128,98 @@ body{
     font-size: 18px;
 }
 
+.subject-item-timeleft{
+    font-size: 30px;
+    color: rgb(138, 138, 138);
+}
+
 .subject-item-room{
     display: inline-block;
-    position: absolute;
+    /* position: absolute;
     top: 10px;
-    right: 10px;
-    font-size: 60px;
-    color: rgb(121, 121, 121);
+    right: 10px; */
+    font-size: 15px;
+}
+
+.next-class-remain-time{
+    float: right;
+}
+
+.subject-item-summary{
+    display: inline-block;
+    width: 100%;
+    /* background-color: red; */
+}
+
+.attendance-table{
+    table-layout: fixed;
+    width: 100%;
+    /* background-color: rgb(255, 118, 118); */
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.attendance-table tr{
+    border-bottom: 1px solid white;
+    
+}
+
+.attendance-table th,td{
+    padding: 10px 5px;
+    border: 2px solid rgb(158, 158, 158);
+}
+
+.week-info{
+    font-size: 23px;
+}
+
+.date-info{
+    font-size: 15px;
+}
+
+.date-info th{
+    /* min-width: 27px; */
+}
+
+.attendance-info{
+    font-size: 20px;
+}
+
+.attended{
+    text-shadow: 0 0 var(--attendance-text-shadow-size) rgb(0, 172, 0);
+}
+
+.absent{
+    text-shadow: 0 0 var(--attendance-text-shadow-size) red;
+}
+
+.unknown{
+    text-shadow: 0 0 var(--attendance-text-shadow-size) rgb(255, 94, 0);
+}
+
+.midterm-test{
+    text-shadow: 0 0 var(--attendance-text-shadow-size) rgb(119, 0, 255);
+}
+
+.finalterm-test{
+    text-shadow: 0 0 var(--attendance-text-shadow-size) rgb(119, 0, 255);
+}
+
+.called{
+    box-shadow: inset 0 -12px 10px -10px red;
+}
+
+.not-called{
+    box-shadow: inset 0 -12px 10px -10px rgb(0, 255, 0);
+}
+
+.unknown-called{
+    box-shadow: inset 0 -12px 10px -10px rgb(255, 115, 0);
+}
+
+.subject-info-summary{
+    display: inline-block;
+    width: 100%;
 }
