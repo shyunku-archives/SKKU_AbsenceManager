@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "start": "nodemon -e js,ejs,css ./server.js"
+  },
+  "dependencies": {
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "node-java": "^1.0.1"
+  }
+}
