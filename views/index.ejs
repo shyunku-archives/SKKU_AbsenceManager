@@ -14,227 +14,332 @@
         <div id="body_content">
             <div id="main_banner">
                 <div class="main-subject-info-wrapper">
-                    <span class="main-subject-name">오픈소스소프트웨어실습</span>
-                    <span class="main-subject-professor">김의성 교수님</span>
-                    <span class="main-subject-room narrow-font">23219</span>
+                    <span class="main-subject-name" id="main_subject_name">-</span>
+                    <span class="main-subject-professor" id="main_subject_professor">-</span>
+                    <span class="main-subject-room narrow-font" id="main_subject_room_number">-</span>
                 </div>
                 <div class="main-subject-absence-summary-wrapper">
                     <span>현재까지 </span>
-                    <span class="absence-num">5</span>
+                    <span class="absence-num">-</span>
                     <span>번 결석했습니다.</span>
-                    <span>(13/18)</span>
+                    <span>(-/-)</span>
                 </div>
                 <div id="absence_canvas_wrapper">
                     <canvas id="absence_status_canvas"></canvas>
                 </div>
+                <div class="subject-summary-item">
+                    <div class="subject-item-info">
+                        <span class="subject-item-name" id="main_subject_lower_name">-</span>
+                        <span class="subject-item-timeleft" id="main_subject_lower_attendance">-/-</span>
+                        <span class="next-class-timestamp" id="main_subject_lower_absence">결석 -회</span>
+                    </div>
+                    <div class="subject-item-summary">
+                        <div class="subject-info-summary">
+                            <span class="subject-item-room">- 교수님 - -호</span>
+                            <span class="next-class-remain-time" id="main_class_remain_time">다음 수업까지 -시간 -분 -초 남음</span>
+                        </div>
+                        <table class="attendance-table" width="420">
+                            <tr class="week-info">
+                                <th colspan="2">1주차</th>
+                                <th colspan="2">2주차</th>
+                                <th colspan="2">3주차</th>
+                                <th colspan="2">4주차</th>
+                                <th colspan="2">5주차</th>
+                                <th colspan="2">6주차</th>
+                                <th colspan="2">7주차</th>
+                                <th colspan="2">8주차</th>
+                                <th colspan="2">9주차</th>
+                                <th colspan="2">10주차</th>
+                                <th colspan="2">11주차</th>
+                                <th colspan="2">12주차</th>
+                                <th colspan="2">13주차</th>
+                                <th colspan="2">14주차</th>
+                                <th colspan="2">15주차</th>
+                                <th colspan="2">16주차</th>
+                            </tr>
+                            <tr class="date-info">
+                                <th>3/2</th>
+                                <th>3/4</th>
+                                <th>3/9</th>
+                                <th>3/11</th>
+                                <th>3/16</th>
+                                <th>3/18</th>
+                                <th>3/23</th>
+                                <th>3/25</th>
+                                <th>3/30</th>
+                                <th>4/1</th>
+                                <th>4/6</th>
+                                <th>4/8</th>
+                                <th>4/13</th>
+                                <th>4/15</th>
+                                <th>4/20</th>
+                                <th>4/22</th>
+                                <th>4/27</th>
+                                <th>4/29</th>
+                                <th>5/4</th>
+                                <th>5/6</th>
+                                <th>5/11</th>
+                                <th>5/13</th>
+                                <th>5/18</th>
+                                <th>5/20</th>
+                                <th>5/25</th>
+                                <th>5/27</th>
+                                <th>6/1</th>
+                                <th>6/3</th>
+                                <th>6/8</th>
+                                <th>6/10</th>
+                                <th>6/15</th>
+                                <th>6/17</th>
+                            </tr>
+                            <tr class="attendance-info">
+                                <td class="attended called">출석</td>
+                                <td class="attended not-called">출석</td>
+                                <td class="absent called">결석</td>
+                                <td class="attended called">출석</td>
+                                <td class="attended called">출석</td>
+                                <td class="attended called">출석</td>
+                                <td class="attended called">출석</td>
+                                <td class="attended not-called">출석</td>
+                                <td class="attended not-called">출석</td>
+                                <td class="attended called">출석</td>
+                                <td class="absent not-called">결석</td>
+                                <td class="absent unknown-called">결석</td>
+                                <td class="attended not-called">출석</td>
+                                <td class="attended called">출석</td>
+                                <td class="absent unknown-called">결석</td>
+                                <td class="midterm-test unknown-called">중간</td>
+                                <td class="absent unknown-called">결석</td>
+                                <td class="unknown called">모름</td>
+                                <td class="attended called">출석</td>
+                                <td class="attended not-called">출석</td>
+                                <td class="attended called">출석</td>
+                                <td class="attended called">출석</td>
+                                <td class="attended called">출석</td>
+                                <td class="attended called">출석</td>
+                                <td class="attended not-called">출석</td>
+                                <td class="attended called">출석</td>
+                                <td class="attended called">출석</td>
+                                <td class="attended called">출석</td>
+                                <td class="attended called">출석</td>
+                                <td class="attended called">출석</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
             <div id="subject_summary_list_wrapper">
-                <div class="subject-summary-item">
-                    <div class="subject-item-info">
-                        <span class="subject-item-name">프로그래밍언어</span>
-                        <span class="subject-item-timeleft">23/28</span>
-                        <span class="next-class-timestamp">결석 5회</span>
-                    </div>
-                    <div class="subject-item-summary">
-                        <div class="subject-info-summary">
-                            <span class="subject-item-room">한유성 교수님 - 400118호</span>
-                            <span class="next-class-remain-time">다음 수업까지 2시간 42분 45초 남음</span>
-                        </div>
-                        <table class="attendance-table" width="420">
-                            <tr class="week-info">
-                                <th colspan="2">1주차</th>
-                                <th colspan="2">2주차</th>
-                                <th colspan="2">3주차</th>
-                                <th colspan="2">4주차</th>
-                                <th colspan="2">5주차</th>
-                                <th colspan="2">6주차</th>
-                                <th colspan="2">7주차</th>
-                                <th colspan="2">8주차</th>
-                                <th colspan="2">9주차</th>
-                                <th colspan="2">10주차</th>
-                                <th colspan="2">11주차</th>
-                                <th colspan="2">12주차</th>
-                                <th colspan="2">13주차</th>
-                                <th colspan="2">14주차</th>
-                                <th colspan="2">15주차</th>
-                                <th colspan="2">16주차</th>
-                            </tr>
-                            <tr class="date-info">
-                                <th>3/2</th>
-                                <th>3/4</th>
-                                <th>3/9</th>
-                                <th>3/11</th>
-                                <th>3/16</th>
-                                <th>3/18</th>
-                                <th>3/23</th>
-                                <th>3/25</th>
-                                <th>3/30</th>
-                                <th>4/1</th>
-                                <th>4/6</th>
-                                <th>4/8</th>
-                                <th>4/13</th>
-                                <th>4/15</th>
-                                <th>4/20</th>
-                                <th>4/22</th>
-                                <th>4/27</th>
-                                <th>4/29</th>
-                                <th>5/4</th>
-                                <th>5/6</th>
-                                <th>5/11</th>
-                                <th>5/13</th>
-                                <th>5/18</th>
-                                <th>5/20</th>
-                                <th>5/25</th>
-                                <th>5/27</th>
-                                <th>6/1</th>
-                                <th>6/3</th>
-                                <th>6/8</th>
-                                <th>6/10</th>
-                                <th>6/15</th>
-                                <th>6/17</th>
-                            </tr>
-                            <tr class="attendance-info">
-                                <td class="attended called">출석</td>
-                                <td class="attended not-called">출석</td>
-                                <td class="absent called">결석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended not-called">출석</td>
-                                <td class="attended not-called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="absent not-called">결석</td>
-                                <td class="absent unknown-called">결석</td>
-                                <td class="attended not-called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="absent unknown-called">결석</td>
-                                <td class="midterm-test unknown-called">중간</td>
-                                <td class="absent unknown-called">결석</td>
-                                <td class="unknown called">모름</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended not-called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended not-called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="subject-summary-item">
-                    <div class="subject-item-info">
-                        <span class="subject-item-name">시스템프로그래밍</span>
-                        <span class="subject-item-timeleft">22/28</span>
-                        <span class="next-class-timestamp">결석 6회</span>
-                    </div>
-                    <div class="subject-item-summary">
-                        <div class="subject-info-summary">
-                            <span class="subject-item-room">서환수 교수님 - 21317호</span>
-                            <span class="next-class-remain-time">다음 수업까지 4시간 57분 45초 남음</span>
-                        </div>
-                        <table class="attendance-table" width="420">
-                            <tr class="week-info">
-                                <th colspan="2">1주차</th>
-                                <th colspan="2">2주차</th>
-                                <th colspan="2">3주차</th>
-                                <th colspan="2">4주차</th>
-                                <th colspan="2">5주차</th>
-                                <th colspan="2">6주차</th>
-                                <th colspan="2">7주차</th>
-                                <th colspan="2">8주차</th>
-                                <th colspan="2">9주차</th>
-                                <th colspan="2">10주차</th>
-                                <th colspan="2">11주차</th>
-                                <th colspan="2">12주차</th>
-                                <th colspan="2">13주차</th>
-                                <th colspan="2">14주차</th>
-                                <th colspan="2">15주차</th>
-                                <th colspan="2">16주차</th>
-                            </tr>
-                            <tr class="date-info">
-                                <th>3/2</th>
-                                <th>3/4</th>
-                                <th>3/9</th>
-                                <th>3/11</th>
-                                <th>3/16</th>
-                                <th>3/18</th>
-                                <th>3/23</th>
-                                <th>3/25</th>
-                                <th>3/30</th>
-                                <th>4/1</th>
-                                <th>4/6</th>
-                                <th>4/8</th>
-                                <th>4/13</th>
-                                <th>4/15</th>
-                                <th>4/20</th>
-                                <th>4/22</th>
-                                <th>4/27</th>
-                                <th>4/29</th>
-                                <th>5/4</th>
-                                <th>5/6</th>
-                                <th>5/11</th>
-                                <th>5/13</th>
-                                <th>5/18</th>
-                                <th>5/20</th>
-                                <th>5/25</th>
-                                <th>5/27</th>
-                                <th>6/1</th>
-                                <th>6/3</th>
-                                <th>6/8</th>
-                                <th>6/10</th>
-                                <th>6/15</th>
-                                <th>6/17</th>
-                            </tr>
-                            <tr class="attendance-info">
-                                <td class="attended called">출석</td>
-                                <td class="attended not-called">출석</td>
-                                <td class="absent called">결석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended not-called">출석</td>
-                                <td class="attended not-called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="absent not-called">결석</td>
-                                <td class="absent unknown-called">결석</td>
-                                <td class="attended not-called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="absent unknown-called">결석</td>
-                                <td class="midterm-test unknown-called">중간</td>
-                                <td class="absent unknown-called">결석</td>
-                                <td class="unknown called">모름</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended not-called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended not-called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">출석</td>
-                                <td class="attended called">결석</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
+
             </div>
         </div>
+        
         <div id="side_menu" class="active">
         </div>
-        <button id="side_menu_opener">menu</div>
+        <button id="side_menu_opener">menu</button>
+        <script>
+            let tableDataString = "<%= tableData %>";
+            let cleanTableData = replaceAll(tableDataString, '&#34;', '\"');
+            let tableJson = JSON.parse(cleanTableData);
+            let tableInfo = [];
+
+            for(let i=0;i<tableJson.length;i++){
+                tableInfo.push(tableJson[i]);
+            }
+
+            $(function(){
+                initDivs(tableInfo.length-1);
+                setInterval(function(){
+                    evaluateTables(tableInfo);
+                },1000);
+            });
+            
+
+            function replaceAll(str, searchStr, replaceStr) {
+                return str.split(searchStr).join(replaceStr);
+            }
+
+            function evaluateTables(tableInfo){
+                let current = new Date();
+                let currentTimeOffset = (current.getDay()-1)*86400 + current.getHours()*3600 + current.getMinutes()*60 + current.getSeconds();
+                // let currentTimeOffset = (current.getDay()-1)*86400 + current.getHours()*3600 + current.getMinutes()*60 + current.getSeconds() 
+                // - 300000;
+
+                let resortedTable = [];
+                let upperIndex = tableInfo.length;
+                let determined = false;
+
+                for(let i=0;i<tableInfo.length;i++){
+                    let endTime = getTimeIntervalOffset(tableInfo[i]).end;
+                    // console.log(endTime);
+                    if(endTime > currentTimeOffset){
+                        resortedTable.push(tableInfo[i]);
+                        if(!determined){
+                            determined = true;
+                            upperIndex = i;
+                        }
+                    }
+                }
+                for(let i=0;i<upperIndex;i++){
+                    let nextWeekClass = Object.assign(Object.create(Object.getPrototypeOf(tableInfo[i])), tableInfo[i]);
+                    nextWeekClass.timeIntervals.day += 7;
+                    resortedTable.push(nextWeekClass);
+                }
+
+                console.log(resortedTable);
+                //resort complete
+                let focusedSubject = resortedTable[0];
+
+
+                //main subject setting
+                $('#main_subject_name').text(focusedSubject.name);
+                $('#main_subject_professor').text(focusedSubject.professorName + " 교수님");
+                $('#main_subject_room_number').text(focusedSubject.timeIntervals.place);
+
+                $('#main_subject_lower_name').text(focusedSubject.name);
+                //수업 남은시간도 별개로 표시
+                let diff = getTimeIntervalOffset(focusedSubject).start - currentTimeOffset;
+                let formatter = getTimeFormat(diff);
+                $('#main_class_remain_time').text("다음 수업까지 "+formatter.h+"시간 "+formatter.m+"분 "+formatter.s+"초 남음")
+
+                //sub subjects setting
+                for(let i=1;i<resortedTable.length;i++){
+                    let index = i-1;
+                    let currentSubject = resortedTable[i];
+
+                    $('#subject_item_name_'+index).text(currentSubject.name);
+                    $('#subject_item_room_'+index).text(currentSubject.professorName+" 교수님 - "+currentSubject.timeIntervals.place+"호");
+                    diff = getTimeIntervalOffset(currentSubject).start - currentTimeOffset;
+                    formatter = getTimeFormat(diff);
+                    $('#next_class_remain_time_'+index).text("다음 수업까지 "+formatter.h+"시간 "+formatter.m+"분 "+formatter.s+"초 남음");
+                }
+            }
+
+            function getTimeIntervalOffset(obj){
+                return {
+                        start: obj.timeIntervals.day * 86400 + obj.timeIntervals.start * 5 * 60,
+                        end: obj.timeIntervals.day * 86400 + obj.timeIntervals.end * 5 * 60,
+                    };
+            }
+
+            function initDivs(subSubjectNum){
+                for(let i=0;i<subSubjectNum;i++){
+                    $('#subject_summary_list_wrapper').append(`
+                    <div class="subject-summary-item">
+                        <div class="subject-item-info">
+                            <span class="subject-item-name" id="subject_item_name_${i}">-</span>
+                            <span class="subject-item-timeleft">-/-</span>
+                            <span class="next-class-timestamp">결석 -회</span>
+                        </div>
+                        <div class="subject-item-summary">
+                            <div class="subject-info-summary">
+                                <span class="subject-item-room" id="subject_item_room_${i}">- 교수님 - -호</span>
+                                <span class="next-class-remain-time" id="next_class_remain_time_${i}">다음 수업까지 -시간 -분 -초 남음</span>
+                            </div>
+                            <table class="attendance-table" width="420">
+                                <tr class="week-info">
+                                    <th colspan="2">1주차</th>
+                                    <th colspan="2">2주차</th>
+                                    <th colspan="2">3주차</th>
+                                    <th colspan="2">4주차</th>
+                                    <th colspan="2">5주차</th>
+                                    <th colspan="2">6주차</th>
+                                    <th colspan="2">7주차</th>
+                                    <th colspan="2">8주차</th>
+                                    <th colspan="2">9주차</th>
+                                    <th colspan="2">10주차</th>
+                                    <th colspan="2">11주차</th>
+                                    <th colspan="2">12주차</th>
+                                    <th colspan="2">13주차</th>
+                                    <th colspan="2">14주차</th>
+                                    <th colspan="2">15주차</th>
+                                    <th colspan="2">16주차</th>
+                                </tr>
+                                <tr class="date-info">
+                                    <th>3/2</th>
+                                    <th>3/4</th>
+                                    <th>3/9</th>
+                                    <th>3/11</th>
+                                    <th>3/16</th>
+                                    <th>3/18</th>
+                                    <th>3/23</th>
+                                    <th>3/25</th>
+                                    <th>3/30</th>
+                                    <th>4/1</th>
+                                    <th>4/6</th>
+                                    <th>4/8</th>
+                                    <th>4/13</th>
+                                    <th>4/15</th>
+                                    <th>4/20</th>
+                                    <th>4/22</th>
+                                    <th>4/27</th>
+                                    <th>4/29</th>
+                                    <th>5/4</th>
+                                    <th>5/6</th>
+                                    <th>5/11</th>
+                                    <th>5/13</th>
+                                    <th>5/18</th>
+                                    <th>5/20</th>
+                                    <th>5/25</th>
+                                    <th>5/27</th>
+                                    <th>6/1</th>
+                                    <th>6/3</th>
+                                    <th>6/8</th>
+                                    <th>6/10</th>
+                                    <th>6/15</th>
+                                    <th>6/17</th>
+                                </tr>
+                                <tr class="attendance-info">
+                                    <td class="attended called">출석</td>
+                                    <td class="attended not-called">출석</td>
+                                    <td class="absent called">결석</td>
+                                    <td class="attended called">출석</td>
+                                    <td class="attended called">출석</td>
+                                    <td class="attended called">출석</td>
+                                    <td class="attended called">출석</td>
+                                    <td class="attended not-called">출석</td>
+                                    <td class="attended not-called">출석</td>
+                                    <td class="attended called">출석</td>
+                                    <td class="absent not-called">결석</td>
+                                    <td class="absent unknown-called">결석</td>
+                                    <td class="attended not-called">출석</td>
+                                    <td class="attended called">출석</td>
+                                    <td class="absent unknown-called">결석</td>
+                                    <td class="midterm-test unknown-called">중간</td>
+                                    <td class="absent unknown-called">결석</td>
+                                    <td class="unknown called">모름</td>
+                                    <td class="attended called">출석</td>
+                                    <td class="attended not-called">출석</td>
+                                    <td class="attended called">출석</td>
+                                    <td class="attended called">출석</td>
+                                    <td class="attended called">출석</td>
+                                    <td class="attended called">출석</td>
+                                    <td class="attended not-called">출석</td>
+                                    <td class="attended called">출석</td>
+                                    <td class="attended called">출석</td>
+                                    <td class="attended called">출석</td>
+                                    <td class="attended called">출석</td>
+                                    <td class="attended called">출석</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>`
+                    );
+                }
+            }
+
+            function getTimeFormat(diff){
+                let hours = parseInt(diff/3600);
+                let mins = parseInt((diff%3600)/60);
+                let secs = parseInt(diff%60);
+                return {
+                    h: hours,
+                    m: mins,
+                    s: secs,
+                }
+            }
+        </script>
     </body>
 </html>

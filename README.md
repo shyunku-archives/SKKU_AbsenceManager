@@ -4,5 +4,8 @@
 에브리타임 계정과 연동 예정
 
 ## Update History
+### v0.2
+Backend에서 Frontend로 데이터 바인딩 일부 구현
+
 ### v0.1
 Node.js와 puppeteer, cheerio를 통해 에브리타임 timetable Fetch/Parse 구현

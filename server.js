@@ -12,8 +12,10 @@ let everytimeInfo = null;
 
 app.get('/', async(req, res) => {
     everytimeInfo = await crawl.get_data();
-    
-    res.render('index');
+
+    res.render('index', {
+        tableData: JSON.stringify(everytimeInfo),
+    });
 });
 
 app.listen(2700, () => {

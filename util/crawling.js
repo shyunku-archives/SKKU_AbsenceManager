@@ -34,11 +34,15 @@ const Subject = class{
         this.professorName = pf;
         this.id = id;
         this.code = code;
-        this.timeIntervals = [];
+        this.timeIntervals = null;
     }
 
-    addTimeInterval(data){
-        this.timeIntervals.push(data);
+    setTimeInterval(data){
+        this.timeIntervals = data;
+    }
+
+    get timeIntervalOffset(){
+        return this.timeIntervals.day * 86400 + this.timeIntervals.endtime * 5 * 60;
     }
 };
 
@@ -119,23 +123,29 @@ exports.get_data = async function(){
             let code = subject.find('internal').attr('value');
             let pfname = subject.find('professor').attr('value');
 
-            let classInfo = new Subject(name, pfname, id, code);
+            const classInfo = new Subject(name, pfname, id, code);
 
             const timeInfos = subject.find('data');
             for(let j=0;j<timeInfos.length;j++){
                 const timeInfo = cheerio(timeInfos[j]);
-                let day = timeInfo.attr('day');
-                let starttime = timeInfo.attr('starttime');
-                let endtime = timeInfo.attr('endtime');
+                let day = Number(timeInfo.attr('day'));
+                let starttime = Number(timeInfo.attr('starttime'));
+                let endtime = Number(timeInfo.attr('endtime'));
                 let place = timeInfo.attr('place');
 
                 let timeInterval = new SubjectTimeInterval(day, starttime, endtime, place);
-                classInfo.addTimeInterval(timeInterval);
-            }
 
-            classInfoBundle.push(classInfo);
+                const individualClassInfo = Object.assign(Object.create(Object.getPrototypeOf(classInfo)), classInfo);
+                individualClassInfo.setTimeInterval(timeInterval);
+                classInfoBundle.push(individualClassInfo);
+            }
         }
 
+        classInfoBundle.sort((a,b) => {
+            let aX = a.timeIntervals.day * 24 * 12 + a.timeIntervals.start;
+            let bX = b.timeIntervals.day * 24 * 12 + b.timeIntervals.start;
+            return aX>bX?1:(bX>aX?-1:0);
+        });
         return classInfoBundle;
     }
 };
