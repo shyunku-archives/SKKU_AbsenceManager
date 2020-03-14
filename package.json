@@ -1,10 +1,12 @@
 {
   "scripts": {
-    "start": "nodemon -e js,ejs,css ./server.js"
+    "start": "nodemon -e js,ejs,css,json ./server.js"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
-    "node-java": "^1.0.1"
+    "node-java": "^1.0.1",
+    "puppeteer": "^2.1.1"
   }
 }

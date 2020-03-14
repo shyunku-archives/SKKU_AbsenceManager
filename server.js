@@ -2,13 +2,17 @@ const express = require('express');
 const app = express();
 const ejs = require('ejs');
 const path = require('path');
+const crawl = require('./util/crawling');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views'));
 app.use(express.static(path.join(__dirname, 'static')));
 
+let everytimeInfo = null;
 
-app.get('/', (req, res) => {
+app.get('/', async(req, res) => {
+    everytimeInfo = await crawl.get_data();
+    
     res.render('index');
 });
 
