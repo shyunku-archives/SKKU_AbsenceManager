@@ -135,13 +135,16 @@
         </div>
         
         <div id="side_menu" class="active">
+            <div>23:52:23</div>
         </div>
         <button id="side_menu_opener">menu</button>
         <script>
+            const weekCount = 16;
             let tableDataString = "<%= tableData %>";
             let cleanTableData = replaceAll(tableDataString, '&#34;', '\"');
             let tableJson = JSON.parse(cleanTableData);
             let tableInfo = [];
+            let dateTable = [];
 
             for(let i=0;i<tableJson.length;i++){
                 tableInfo.push(tableJson[i]);
@@ -153,6 +156,11 @@
                     evaluateTables(tableInfo);
                 },1000);
             });
+
+            function getDateTableInfo(){
+                const current = new Date();
+                let firstDate = 0;
+            }
             
 
             function replaceAll(str, searchStr, replaceStr) {
@@ -161,9 +169,14 @@
 
             function evaluateTables(tableInfo){
                 let current = new Date();
-                let currentTimeOffset = (current.getDay()-1)*86400 + current.getHours()*3600 + current.getMinutes()*60 + current.getSeconds();
-                // let currentTimeOffset = (current.getDay()-1)*86400 + current.getHours()*3600 + current.getMinutes()*60 + current.getSeconds() 
-                // - 300000;
+                const debugTimeOffset = 24*3600 + 19*3600 + 55 * 60 + 20;
+                let currentTimeOffset = (current.getDay()-1)*86400 + current.getHours()*3600 + current.getMinutes()*60 + current.getSeconds() +debugTimeOffset;
+
+
+                let debugTime = new Date();
+                debugTime.setTime(current.getTime() + debugTimeOffset * 1000 + 9*3600000);
+                let timeText = getTimeFormat()
+                $('#side_menu > div').text(debugTime.toUTCString());
 
                 let resortedTable = [];
                 let upperIndex = tableInfo.length;
@@ -171,7 +184,6 @@
 
                 for(let i=0;i<tableInfo.length;i++){
                     let endTime = getTimeIntervalOffset(tableInfo[i]).end;
-                    // console.log(endTime);
                     if(endTime > currentTimeOffset){
                         resortedTable.push(tableInfo[i]);
                         if(!determined){
@@ -180,13 +192,13 @@
                         }
                     }
                 }
+
                 for(let i=0;i<upperIndex;i++){
                     let nextWeekClass = Object.assign(Object.create(Object.getPrototypeOf(tableInfo[i])), tableInfo[i]);
                     nextWeekClass.timeIntervals.day += 7;
                     resortedTable.push(nextWeekClass);
                 }
 
-                console.log(resortedTable);
                 //resort complete
                 let focusedSubject = resortedTable[0];
 
@@ -199,8 +211,12 @@
                 $('#main_subject_lower_name').text(focusedSubject.name);
                 //수업 남은시간도 별개로 표시
                 let diff = getTimeIntervalOffset(focusedSubject).start - currentTimeOffset;
-                let formatter = getTimeFormat(diff);
-                $('#main_class_remain_time').text("다음 수업까지 "+formatter.h+"시간 "+formatter.m+"분 "+formatter.s+"초 남음")
+                if(diff >= 0){
+                    $('#main_class_remain_time').text("다음 수업까지 "+getTimeFormatString(diff)+" 남음");
+                }else{
+                    diff = getTimeIntervalOffset(focusedSubject).end - currentTimeOffset;
+                    $('#main_class_remain_time').text("현재 수업시간 "+getTimeFormatString(diff)+" 남음");
+                }
 
                 //sub subjects setting
                 for(let i=1;i<resortedTable.length;i++){
@@ -210,9 +226,34 @@
                     $('#subject_item_name_'+index).text(currentSubject.name);
                     $('#subject_item_room_'+index).text(currentSubject.professorName+" 교수님 - "+currentSubject.timeIntervals.place+"호");
                     diff = getTimeIntervalOffset(currentSubject).start - currentTimeOffset;
-                    formatter = getTimeFormat(diff);
-                    $('#next_class_remain_time_'+index).text("다음 수업까지 "+formatter.h+"시간 "+formatter.m+"분 "+formatter.s+"초 남음");
+                    $('#next_class_remain_time_'+index).text("다음 수업까지 "+getTimeFormatString(diff)+" 남음");
+
+                    let dateListDivChildren = $('#date_list_'+index+" th");
+                    let weekListDivChildren = $('#week_list_'+index+" th");
+                    let attendanceListDivChildren = $('#attendance_list_'+index+" td");
+                    let dateNum = getDateCountSubject(currentSubject.name);
+                    let currentLen = dateListDivChildren.length;
+
+                    if(dateNum*weekCount != currentLen){
+                        dateListDivChildren.remove();
+                        attendanceListDivChildren.remove();
+                        for(let j=0;j<dateNum*weekCount;j++){
+                            $('#date_list_'+index).append(`<th></th>`);
+                            $('#attendance_list_'+index).append('<td></td>')
+                        }
+                        weekListDivChildren.each(function(ind, child){
+                            $(child).attr('colspan', dateNum);
+                        });
+                    }
                 }
+            }
+
+            function getDateCountSubject(subjectName){
+                let count = 0;
+                for(let i=0;i<tableInfo.length;i++){
+                    if(tableInfo[i].name == subjectName)count++;
+                }
+                return count;
             }
 
             function getTimeIntervalOffset(obj){
@@ -237,7 +278,7 @@
                                 <span class="next-class-remain-time" id="next_class_remain_time_${i}">다음 수업까지 -시간 -분 -초 남음</span>
                             </div>
                             <table class="attendance-table" width="420">
-                                <tr class="week-info">
+                                <tr class="week-info" id="week_list_${i}">
                                     <th colspan="2">1주차</th>
                                     <th colspan="2">2주차</th>
                                     <th colspan="2">3주차</th>
@@ -255,71 +296,71 @@
                                     <th colspan="2">15주차</th>
                                     <th colspan="2">16주차</th>
                                 </tr>
-                                <tr class="date-info">
-                                    <th>3/2</th>
-                                    <th>3/4</th>
-                                    <th>3/9</th>
-                                    <th>3/11</th>
-                                    <th>3/16</th>
-                                    <th>3/18</th>
-                                    <th>3/23</th>
-                                    <th>3/25</th>
-                                    <th>3/30</th>
-                                    <th>4/1</th>
-                                    <th>4/6</th>
-                                    <th>4/8</th>
-                                    <th>4/13</th>
-                                    <th>4/15</th>
-                                    <th>4/20</th>
-                                    <th>4/22</th>
-                                    <th>4/27</th>
-                                    <th>4/29</th>
-                                    <th>5/4</th>
-                                    <th>5/6</th>
-                                    <th>5/11</th>
-                                    <th>5/13</th>
-                                    <th>5/18</th>
-                                    <th>5/20</th>
-                                    <th>5/25</th>
-                                    <th>5/27</th>
-                                    <th>6/1</th>
-                                    <th>6/3</th>
-                                    <th>6/8</th>
-                                    <th>6/10</th>
-                                    <th>6/15</th>
-                                    <th>6/17</th>
+                                <tr class="date-info" id="date_list_${i}">
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
-                                <tr class="attendance-info">
-                                    <td class="attended called">출석</td>
-                                    <td class="attended not-called">출석</td>
-                                    <td class="absent called">결석</td>
-                                    <td class="attended called">출석</td>
-                                    <td class="attended called">출석</td>
-                                    <td class="attended called">출석</td>
-                                    <td class="attended called">출석</td>
-                                    <td class="attended not-called">출석</td>
-                                    <td class="attended not-called">출석</td>
-                                    <td class="attended called">출석</td>
-                                    <td class="absent not-called">결석</td>
-                                    <td class="absent unknown-called">결석</td>
-                                    <td class="attended not-called">출석</td>
-                                    <td class="attended called">출석</td>
-                                    <td class="absent unknown-called">결석</td>
-                                    <td class="midterm-test unknown-called">중간</td>
-                                    <td class="absent unknown-called">결석</td>
-                                    <td class="unknown called">모름</td>
-                                    <td class="attended called">출석</td>
-                                    <td class="attended not-called">출석</td>
-                                    <td class="attended called">출석</td>
-                                    <td class="attended called">출석</td>
-                                    <td class="attended called">출석</td>
-                                    <td class="attended called">출석</td>
-                                    <td class="attended not-called">출석</td>
-                                    <td class="attended called">출석</td>
-                                    <td class="attended called">출석</td>
-                                    <td class="attended called">출석</td>
-                                    <td class="attended called">출석</td>
-                                    <td class="attended called">출석</td>
+                                <tr class="attendance-info" id="attendance_list_${i}">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
@@ -331,14 +372,43 @@
             }
 
             function getTimeFormat(diff){
-                let hours = parseInt(diff/3600);
+                if(diff<0) diff = -diff;
+                let days = parseInt(diff/(3600*24))
+                let hours = parseInt((diff%(3600*24))/3600);
                 let mins = parseInt((diff%3600)/60);
                 let secs = parseInt(diff%60);
                 return {
+                    d: days,
                     h: hours,
                     m: mins,
                     s: secs,
                 }
+            }
+
+            function getTimeFormatString(diff){
+                let format = getTimeFormat(diff);
+                let dayStr = format.d + "일 ";
+                let hourStr = format.h + "시간 ";
+                let minStr = format.m + "분 ";
+                let secStr = format.s + "초";
+
+                let finalStr = "";
+                let connect = false;
+                if(format.d > 0){
+                    finalStr += dayStr;
+                    connect = true;
+                }
+                if(format.h > 0 || connect){
+                    finalStr += hourStr;
+                    connect = true;
+                }
+                if(format.m > 0 || connect){
+                    finalStr += minStr;
+                    connect = true;
+                }
+                finalStr += secStr;
+
+                return finalStr;
             }
         </script>
     </body>
