@@ -28,16 +28,7 @@
                     <canvas id="absence_status_canvas"></canvas>
                 </div>
                 <div class="subject-summary-item">
-                    <div class="subject-item-info">
-                        <span class="subject-item-name" id="main_subject_lower_name">-</span>
-                        <span class="subject-item-timeleft" id="main_subject_lower_attendance">-/-</span>
-                        <span class="next-class-timestamp" id="main_subject_lower_absence">결석 -회</span>
-                    </div>
                     <div class="subject-item-summary">
-                        <div class="subject-info-summary">
-                            <span class="subject-item-room">- 교수님 - -호</span>
-                            <span class="next-class-remain-time" id="main_class_remain_time">다음 수업까지 -시간 -분 -초 남음</span>
-                        </div>
                         <table class="attendance-table" width="420">
                             <tr class="week-info">
                                 <th colspan="2">1주차</th>
@@ -143,14 +134,16 @@
             let tableDataString = "<%= tableData %>";
             let cleanTableData = replaceAll(tableDataString, '&#34;', '\"');
             let tableJson = JSON.parse(cleanTableData);
+            const constTableInfo = [];
             let tableInfo = [];
             let dateTable = [];
 
             for(let i=0;i<tableJson.length;i++){
-                tableInfo.push(tableJson[i]);
+                constTableInfo.push(tableJson[i]);
             }
 
             $(function(){
+                tableInfo = [...constTableInfo];
                 initDivs(tableInfo.length-1);
                 setInterval(function(){
                     evaluateTables(tableInfo);
@@ -169,16 +162,16 @@
 
             function evaluateTables(tableInfo){
                 let current = new Date();
-                const debugTimeOffset = 24*3600 + 19*3600 + 55 * 60 + 20;
+                const debugTimeOffset = 0*86400 + 0*3600 + 0 * 60 + 0;
                 let currentTimeOffset = (current.getDay()-1)*86400 + current.getHours()*3600 + current.getMinutes()*60 + current.getSeconds() +debugTimeOffset;
 
 
                 let debugTime = new Date();
                 debugTime.setTime(current.getTime() + debugTimeOffset * 1000 + 9*3600000);
-                let timeText = getTimeFormat()
+                let timeText = getTimeFormat();
                 $('#side_menu > div').text(debugTime.toUTCString());
 
-                let resortedTable = [];
+                const resortedTable = [];
                 let upperIndex = tableInfo.length;
                 let determined = false;
 
@@ -194,7 +187,7 @@
                 }
 
                 for(let i=0;i<upperIndex;i++){
-                    let nextWeekClass = Object.assign(Object.create(Object.getPrototypeOf(tableInfo[i])), tableInfo[i]);
+                    let nextWeekClass = $.extend(true, {}, tableInfo[i]);
                     nextWeekClass.timeIntervals.day += 7;
                     resortedTable.push(nextWeekClass);
                 }
@@ -207,8 +200,6 @@
                 $('#main_subject_name').text(focusedSubject.name);
                 $('#main_subject_professor').text(focusedSubject.professorName + " 교수님");
                 $('#main_subject_room_number').text(focusedSubject.timeIntervals.place);
-
-                $('#main_subject_lower_name').text(focusedSubject.name);
                 //수업 남은시간도 별개로 표시
                 let diff = getTimeIntervalOffset(focusedSubject).start - currentTimeOffset;
                 if(diff >= 0){
@@ -297,72 +288,8 @@
                                     <th colspan="2">16주차</th>
                                 </tr>
                                 <tr class="date-info" id="date_list_${i}">
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
                                 </tr>
                                 <tr class="attendance-info" id="attendance_list_${i}">
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
                                 </tr>
                             </table>
                         </div>
