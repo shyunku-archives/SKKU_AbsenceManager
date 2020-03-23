@@ -12,6 +12,7 @@ let everytimeInfo = null;
 
 app.get('/', async(req, res) => {
     everytimeInfo = await crawl.get_data();
+    console.log(everytimeInfo);
 
     res.render('index', {
         tableData: JSON.stringify(everytimeInfo),

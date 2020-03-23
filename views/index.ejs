@@ -19,10 +19,13 @@
                     <span class="main-subject-room narrow-font" id="main_subject_room_number">-</span>
                 </div>
                 <div class="main-subject-absence-summary-wrapper">
-                    <span>현재까지 </span>
-                    <span class="absence-num">-</span>
-                    <span>번 결석했습니다.</span>
-                    <span>(-/-)</span>
+                    <div id="main_subject_absence_info">
+                        <span>현재까지 </span>
+                        <span class="absence-num">-</span>
+                        <span>번 결석했습니다.</span>
+                        <span>(-/-)</span>
+                    </div>
+                    <span class="next-class-remain-time" id="main_subject_remainer">다음 수업까지 남음</span>
                 </div>
                 <div id="absence_canvas_wrapper">
                     <canvas id="absence_status_canvas"></canvas>
@@ -138,6 +141,13 @@
             let tableInfo = [];
             let dateTable = [];
 
+            const timetableData = class{
+                constructor(){
+                    
+                }
+
+            }
+
             for(let i=0;i<tableJson.length;i++){
                 constTableInfo.push(tableJson[i]);
             }
@@ -203,10 +213,10 @@
                 //수업 남은시간도 별개로 표시
                 let diff = getTimeIntervalOffset(focusedSubject).start - currentTimeOffset;
                 if(diff >= 0){
-                    $('#main_class_remain_time').text("다음 수업까지 "+getTimeFormatString(diff)+" 남음");
+                    $('#main_subject_remainer').text("다음 수업까지 "+getTimeFormatString(diff)+" 남음");
                 }else{
                     diff = getTimeIntervalOffset(focusedSubject).end - currentTimeOffset;
-                    $('#main_class_remain_time').text("현재 수업시간 "+getTimeFormatString(diff)+" 남음");
+                    $('#main_subject_remainer').text("현재 수업시간 "+getTimeFormatString(diff)+" 남음");
                 }
 
                 //sub subjects setting
