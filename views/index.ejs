@@ -9,6 +9,8 @@
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/animate.js"></script>
+        <script type="text/javascript" src="js/util.js"></script>
+        <script type="text/javascript" src="js/table_setting.js"></script>
     </head>
     <body>
         <div id="body_content">
@@ -129,24 +131,18 @@
         </div>
         
         <div id="side_menu" class="active">
-            <div>23:52:23</div>
+            <div>-</div>
         </div>
         <button id="side_menu_opener">menu</button>
         <script>
+            let tableJson = convertRawJson("<%= tableData %>");
+            let semesterData = convertRawJson("<%= semesterData %>");
+            let timeTableID = "<%= tableID %>";
             const weekCount = 16;
-            let tableDataString = "<%= tableData %>";
-            let cleanTableData = replaceAll(tableDataString, '&#34;', '\"');
-            let tableJson = JSON.parse(cleanTableData);
+            
             const constTableInfo = [];
             let tableInfo = [];
             let dateTable = [];
-
-            const timetableData = class{
-                constructor(){
-                    
-                }
-
-            }
 
             for(let i=0;i<tableJson.length;i++){
                 constTableInfo.push(tableJson[i]);
@@ -158,16 +154,14 @@
                 setInterval(function(){
                     evaluateTables(tableInfo);
                 },1000);
+                console.log(semesterData);
+                console.log(timeTableID);
+                updateTableInfo(semesterData, tableID);
             });
 
             function getDateTableInfo(){
                 const current = new Date();
                 let firstDate = 0;
-            }
-            
-
-            function replaceAll(str, searchStr, replaceStr) {
-                return str.split(searchStr).join(replaceStr);
             }
 
             function evaluateTables(tableInfo){

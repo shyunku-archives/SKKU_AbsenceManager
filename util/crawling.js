@@ -90,6 +90,8 @@ exports.get_data = async function(){
             currentSemester = {
                 year: elem.attr('year'),
                 semester: elem.attr('semester'),
+                start_date: elem.attr('start_date'),
+                end_date: elem.attr('end_date'),
             };
             break;
         }
@@ -106,12 +108,12 @@ exports.get_data = async function(){
         $ = cheerio.load(body);
         const $semester = $('table');
         const info = cheerio($semester[0]);
-        let semesterID = info.attr('id');
-        console.log("Fetched Current Semester Info, semester id: "+semesterID);
+        let tableID = info.attr('id');
+        console.log("Fetched Current Semester Info, timetable id: "+tableID);
 
         let classInfoBundle = [];
 
-        response = await page.goto(responseURL.tableResponse+"?id="+semesterID);
+        response = await page.goto(responseURL.tableResponse+"?id="+tableID);
         body = await response.text();
         $ = cheerio.load(body);
         const subjects = $('subject');
@@ -146,7 +148,12 @@ exports.get_data = async function(){
             let bX = b.timeIntervals.day * 24 * 12 + b.timeIntervals.start;
             return aX>bX?1:(bX>aX?-1:0);
         });
-        return classInfoBundle;
+
+        return {
+            classInfo: classInfoBundle,
+            semesterInfo: currentSemester,
+            tableID: tableID,
+        }
     }
 };
 

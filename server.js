@@ -8,15 +8,18 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views'));
 app.use(express.static(path.join(__dirname, 'static')));
 
-let everytimeInfo = null;
-
 app.get('/', async(req, res) => {
-    everytimeInfo = await crawl.get_data();
-    console.log(everytimeInfo);
+    let everytimeInfo = await crawl.get_data();
 
     res.render('index', {
-        tableData: JSON.stringify(everytimeInfo),
+        tableData: JSON.stringify(everytimeInfo.classInfo),
+        semesterData: JSON.stringify(everytimeInfo.semesterInfo),
+        tableID: everytimeInfo.tableID,
     });
+});
+
+app.get('/account', (req, res) => {
+    res.render('account');
 });
 
 app.listen(2700, () => {
