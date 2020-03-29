@@ -7,9 +7,11 @@ const crawl = require('./util/crawling');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views'));
 app.use(express.static(path.join(__dirname, 'static')));
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 app.get('/', async(req, res) => {
-    let everytimeInfo = await crawl.get_data();
+    let everytimeInfo = await crawl.get_everytime_data();
 
     res.render('index', {
         tableData: JSON.stringify(everytimeInfo.classInfo),
@@ -20,6 +22,14 @@ app.get('/', async(req, res) => {
 
 app.get('/account', (req, res) => {
     res.render('account');
+});
+
+app.post('/authen', async(req, res) => {
+    let everytime_id = req.body.ID;
+    let everytime_pw = req.body.PW;
+    let timetableInfo = await crawl.get_timetable_list_data(everytime_id, everytime_pw);
+
+    res.send(timetableInfo);
 });
 
 app.listen(2700, () => {

@@ -46,7 +46,7 @@ const Subject = class{
     }
 };
 
-exports.get_data = async function(){
+exports.get_everytime_data = async function(){
     const browser = await puppeteer.launch({
         headless: true,
     });
@@ -156,6 +156,77 @@ exports.get_data = async function(){
         }
     }
 };
+
+exports.get_timetable_list_data = async function(verify_id, verify_pw){
+    const browser = await puppeteer.launch({
+        headless: true,
+    });
+
+    const page = await browser.newPage();
+    await page.setViewport({
+        width: 1920,
+        height: 1080
+    });
+
+    await page.goto(urlBundle.login);
+    await page.evaluate((id, pw) => {
+        document.querySelector('input[name="userid"]').value = id;
+        document.querySelector('input[name="password"]').value = pw;
+    }, verify_id, verify_pw);
+
+    await page.click('input[value="로그인"]');
+
+    let response = await page.goto(responseURL.SemesterListResponse);
+    let body = await response.text();
+    
+    let $ = cheerio.load(body);
+    const $semesterList = $('semester');
+
+    let curTime = getCurrentDate();
+    let foundCurrentSemester = null;
+
+    for(let i=0; i<$semesterList.length; i++){
+        const elem = cheerio($semesterList[i]);
+        let semesterStartDateString = elem.attr('start_date');
+        let semesterEndDateString = elem.attr('end_date');
+        let startDate = new Date(semesterStartDateString);
+        let endDate = new Date(semesterEndDateString);
+        let startDateValue = startDate.getTime();
+        let endDateValue = endDate.getTime()+86400000;
+        if(curTime>=startDateValue&&curTime<=endDateValue){
+            currentSemester = {
+                year: elem.attr('year'),
+                semester: elem.attr('semester'),
+            };
+            break;
+        }
+    }
+
+    if(currentSemester == null){
+        return {code: 1003};
+    }else{
+        response = await page.goto(responseURL.currentSemesterResponse+"?year="+currentSemester.year+"&semester="+currentSemester.semester);
+        let body = await response.text();
+        $ = cheerio.load(body);
+        const $tables = $('table');
+        const tableCandidates = [];
+        for(let i=0;i<$tables.length;i++){
+            const table = cheerio($tables[i]);
+            tableCandidates.push({
+                id: table.attr('id'),
+                name: table.attr('name'),
+                create_date: table.attr('created_at'),
+                update_date: table.attr('updated_at'),
+            });
+        }
+
+        if(tableCandidates.length == 0) return {code: 1002}
+        return {
+            code: 1000,
+            tables: tableCandidates,
+        }
+    }
+}
 
 
 function getCurrentDate(){

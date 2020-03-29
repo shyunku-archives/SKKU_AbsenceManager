@@ -1,0 +1,6 @@
+{
+    "1000": "Success",
+    "1001": "Failed to authenticate everytime account: wrong ID or PW",
+    "1002": "Failed to fetch timetable candidates: no matched tables",
+    "1003": "Failed to fetch timetable candidates: currently not in semester"
+}

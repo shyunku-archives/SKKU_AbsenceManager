@@ -3,16 +3,31 @@ $(function(){
 });
 
 function loadingBarGraphic(){
-    const loadingBar = $('.loading-bar');
     const bouncingBar = $('.loading-bar .bouncing-bar');
 
     moveBouncingBar(bouncingBar);
-    setInterval(function(){moveBouncingBar(bouncingBar);}, 2200, 'linear');
+    setInterval(() => {moveBouncingBar(bouncingBar);}, 2300, 'linear');
 }
 
-function moveBouncingBar(bar){
+async function moveBouncingBar(bar){
     bar.css("left", "-"+bar.width()+"px");
-    bar.animate({
+    bar.stop().animate({
         left: "100%"
     }, 2000);
+}
+
+function activateLoadingBar(bar){
+    bar.addClass('active');
+}
+
+function deactivateLoadingBar(bar){
+    bar.removeClass('active');
+}
+
+function deactiveBlurredDiv(div){
+    div.removeClass('unfocusable');
+    div.css({
+        'filter': 'blur(0px)',
+        'transition': 'all 1s linear',
+    });
 }
