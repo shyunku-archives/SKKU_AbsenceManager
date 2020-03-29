@@ -239,3 +239,110 @@ body{
     display: inline-block;
     width: 100%;
 }
+
+#main_area{
+    display: inline-block;
+    width: 100%;
+    min-height: 500px;
+    background-color: rgb(58, 58, 58);
+    padding: 20px 30px;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.main-title{
+    display: block;
+    font-size: 90px;
+}
+
+.form-wrapper{
+    display: inline-block;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: rgb(70, 70, 70);
+    box-sizing: border-box;
+    margin-top: 15px;
+}
+
+.form-title{
+    position: relative;
+    display: block;
+    font-size: 45px;
+    padding: 10px 0;
+}
+
+.account-form-item-name{
+    display: inline-block;
+    font-size: 25px;
+    min-width: 120px;
+    padding: 5px 0;
+}
+
+.form-in-row{
+    display: inline-block;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.form-input{
+    display: inline-block;
+    width: 65%;
+    padding: 3px 5px;
+    vertical-align: top;
+    background-color: rgb(0,0,0,0);
+    border: none;
+    border-bottom: 2px solid rgb(207, 207, 207);
+    color: white;
+    font-size: 18px;
+    font-family: inherit;
+}
+
+.form-input:focus{
+    outline: none;
+}
+
+.next-level-button{
+    border: none;
+    float: right;
+    background-color: rgb(201, 201, 201);
+    padding: 5px 12px;
+    font-size: 18px;
+    font-family: inherit;
+}
+
+input[type=button]:focus{
+    outline: none;
+}
+
+input[type=button]:hover{
+    background-color: rgb(122, 152, 218);
+}
+
+input[type=button]:active{
+    background-color: rgb(70, 107, 187);
+}
+
+.loading-bar{
+    display: block;
+    height: 4px;
+
+    background-color: transparent;
+    overflow: hidden;
+}
+
+.loading-bar.active{
+    background-color: rgb(43, 117, 255);
+}
+
+.bouncing-bar{
+    display: inline-block;
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 40%;
+    height: 100%;
+}
+
+.loading-bar.active .bouncing-bar{
+    background-image: linear-gradient(to right, transparent, white, transparent);
+}

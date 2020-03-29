@@ -1,8 +1,36 @@
 <html>
     <head>
         <title>계정 설정</title>
+        <%- include("parts/common_header.ejs") %>
+        <script type="text/javascript" src="js/account.js"></script>
     </head>
     <body>
-        sdf
+        <div id="body_content">
+            <div id="main_area">
+                <span class="main-title">계정 설정</span>
+                <hr>
+                <div class="form-wrapper">
+                    <span class="form-title">Everytime 계정 입력</span>
+                    <div class="form-in-row">
+                        <span class="account-form-item-name">아이디</span>
+                        <input class="form-input">
+                    </div>
+                    <div class="form-in-row">
+                        <span class="account-form-item-name">비밀번호</span>
+                        <input class="form-input" type="password">
+                        <span class="reveal-password"></span>
+                    </div>
+                    <div class="form-in-row">
+                        <input type="button" class="next-level-button" value="Next" id="verify_account_btn">
+                    </div>
+                </div>
+                <div class="loading-bar" id="load_timetable_list_bar">
+                    <div class="bouncing-bar"></div>
+                </div>
+                <div class="form-wrapper">
+                    <span class="form-title">에브리타임 시간표 결정</span>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
