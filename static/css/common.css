@@ -101,7 +101,7 @@ input[type=button]:disabled{
 }
 
 .blurred{
-    filter: blur(4px);
+    filter: blur(5px);
 }
 
 .unfocusable{

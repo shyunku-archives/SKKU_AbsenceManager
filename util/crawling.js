@@ -159,13 +159,18 @@ exports.get_everytime_data = async function(){
 
 exports.get_timetable_list_data = async function(verify_id, verify_pw){
     const browser = await puppeteer.launch({
-        headless: true,
+        headless: false,
     });
 
     const page = await browser.newPage();
     await page.setViewport({
         width: 1920,
         height: 1080
+    });
+
+    page.on('dialog', async(dialog) => {
+        const message = dialog.message();
+        dialog.accept();
     });
 
     await page.goto(urlBundle.login);
@@ -178,12 +183,16 @@ exports.get_timetable_list_data = async function(verify_id, verify_pw){
 
     let response = await page.goto(responseURL.SemesterListResponse);
     let body = await response.text();
+
+    if(body == "A server error occurred and the content cannot be displayed."){
+        return {code: 1001};
+    }
     
     let $ = cheerio.load(body);
     const $semesterList = $('semester');
 
     let curTime = getCurrentDate();
-    let foundCurrentSemester = null;
+    let currentSemester = null;
 
     for(let i=0; i<$semesterList.length; i++){
         const elem = cheerio($semesterList[i]);

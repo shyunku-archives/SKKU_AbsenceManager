@@ -28,6 +28,6 @@ function deactiveBlurredDiv(div){
     div.removeClass('unfocusable');
     div.css({
         'filter': 'blur(0px)',
-        'transition': 'all 1s linear',
+        'transition': 'all 0.8s linear',
     });
 }
