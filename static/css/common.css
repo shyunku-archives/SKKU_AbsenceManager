@@ -71,6 +71,10 @@ input[type=button]:active{
     background-color: rgb(70, 107, 187);
 }
 
+input[type=button]:disabled{
+    background-color: rgb(136, 136, 136);
+}
+
 .loading-bar{
     display: block;
     height: 3px;
