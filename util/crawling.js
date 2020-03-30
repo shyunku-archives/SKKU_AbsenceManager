@@ -159,7 +159,7 @@ exports.get_everytime_data = async function(){
 
 exports.get_timetable_list_data = async function(verify_id, verify_pw){
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
     });
 
     const page = await browser.newPage();
@@ -170,7 +170,10 @@ exports.get_timetable_list_data = async function(verify_id, verify_pw){
 
     page.on('dialog', async(dialog) => {
         const message = dialog.message();
-        dialog.accept();
+        if(message == "아이디나 비밀번호를 바르게 입력해주세요."){
+            console.log("Incorrect id/pw");
+            dialog.accept();
+        }
     });
 
     await page.goto(urlBundle.login);
@@ -206,6 +209,8 @@ exports.get_timetable_list_data = async function(verify_id, verify_pw){
             currentSemester = {
                 year: elem.attr('year'),
                 semester: elem.attr('semester'),
+                start_date: elem.attr('start_date'),
+                end_date: elem.attr('end_date'),
             };
             break;
         }
@@ -218,21 +223,64 @@ exports.get_timetable_list_data = async function(verify_id, verify_pw){
         let body = await response.text();
         $ = cheerio.load(body);
         const $tables = $('table');
-        const tableCandidates = [];
+        const tableData = [];
+
         for(let i=0;i<$tables.length;i++){
             const table = cheerio($tables[i]);
-            tableCandidates.push({
-                id: table.attr('id'),
+            let tableID = table.attr('id');
+
+            let classInfoBundle = [];
+
+            response = await page.goto(responseURL.tableResponse+"?id="+tableID);
+            body = await response.text();
+            $ = cheerio.load(body);
+            const subjects = $('subject');
+
+            for(let j=0;j<subjects.length; j++){
+                const subject = cheerio(subjects[j]);
+                let id = subject.attr('id');
+                let name = subject.find('name').attr('value');
+                let code = subject.find('internal').attr('value');
+                let pfname = subject.find('professor').attr('value');
+
+                const classInfo = new Subject(name, pfname, id, code);
+
+                const timeInfos = subject.find('data');
+                for(let k=0;k<timeInfos.length;k++){
+                    const timeInfo = cheerio(timeInfos[k]);
+                    let day = Number(timeInfo.attr('day'));
+                    let starttime = Number(timeInfo.attr('starttime'));
+                    let endtime = Number(timeInfo.attr('endtime'));
+                    let place = timeInfo.attr('place');
+
+                    let timeInterval = new SubjectTimeInterval(day, starttime, endtime, place);
+
+                    const individualClassInfo = Object.assign(Object.create(Object.getPrototypeOf(classInfo)), classInfo);
+                    individualClassInfo.setTimeInterval(timeInterval);
+                    classInfoBundle.push(individualClassInfo);
+                }
+            }
+
+            classInfoBundle.sort((a,b) => {
+                let aX = a.timeIntervals.day * 24 * 12 + a.timeIntervals.start;
+                let bX = b.timeIntervals.day * 24 * 12 + b.timeIntervals.start;
+                return aX>bX?1:(bX>aX?-1:0);
+            });
+
+            tableData.push({
+                id: tableID,
                 name: table.attr('name'),
                 create_date: table.attr('created_at'),
                 update_date: table.attr('updated_at'),
+                tableSchedule: classInfoBundle,
             });
         }
 
-        if(tableCandidates.length == 0) return {code: 1002}
+        if(tableData.length == 0) return {code: 1002}
         return {
             code: 1000,
-            tables: tableCandidates,
+            semesterData: currentSemester,
+            tableData: tableData,
         }
     }
 }
@@ -244,7 +292,6 @@ function getCurrentDate(){
     const month = now.getMonth()+1;
     const day = now.getDate();
     const dateString = year+"-"+pad(month, 2)+"-"+pad(day, 2);
-    console.log("Current Date: "+dateString);
 
     return now.getTime();
 }

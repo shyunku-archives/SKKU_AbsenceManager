@@ -250,3 +250,11 @@ body{
     box-sizing: border-box;
 }
 
+.course-date-picker{
+    display: inline-block;
+    padding: 2px 5px;
+}
+
+.course-date-picker-wrapper .split-slash{
+    font-size: 25px;
+}

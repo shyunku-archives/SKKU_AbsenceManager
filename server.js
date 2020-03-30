@@ -27,9 +27,9 @@ app.get('/account', (req, res) => {
 app.post('/authen', async(req, res) => {
     let everytime_id = req.body.ID;
     let everytime_pw = req.body.PW;
-    let timetableInfo = await crawl.get_timetable_list_data(everytime_id, everytime_pw);
+    let tableData = await crawl.get_timetable_list_data(everytime_id, everytime_pw);
 
-    res.send(timetableInfo);
+    res.send(tableData);
 });
 
 app.listen(2700, () => {

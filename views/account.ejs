@@ -17,17 +17,17 @@
                     </div>
                     <div class="form-in-row">
                         <span class="form-item-name" >비밀번호</span>
-                        <input class="form-input" type="password" id="everytime_pw_input">
+                        <input class="form-input" type="password" id="everytime_pw_input" spellcheck="false">
                     </div>
                     <div class="form-in-row">
-                        <input type="button" class="next-level-button" value="Next" id="verify_account_btn" spellcheck="false">
+                        <input type="button" class="next-level-button" value="Next" id="verify_account_btn">
                     </div>
                 </div>
                 <div class="loading-bar" id="load_timetable_list_bar">
                     <div class="bouncing-bar"></div>
                 </div>
-                <div class="form-wrapper blurred unfocusable" id="timetable_decision_wrapper">
-                    <span class="form-title">에브리타임 시간표 결정</span>
+                <div class="form-wrapper" id="timetable_decision_wrapper">
+                    <span class="form-title">Everytime 시간표 선택</span>
                     <div class="form-in-row">
                         <span class="form-item-name">시간표 선택</span>
                         <select id="timetable_candidate_selector">
@@ -36,6 +36,22 @@
                     <div class="form-in-row">
                         <span class="form-item-name">ID</span>
                         <span id="selected_subject_id">-</span>
+                    </div>
+                    <div class="form-in-row course-date-picker-wrapper">
+                        <span class="form-item-name">개강 날짜</span>
+                        <input class="course-date-picker" type="number" min="2019" max="2500" value="2020">
+                        <span class="split-slash">/</span>
+                        <input class="course-date-picker" type="number" min="1" max="12" value="1">
+                        <span class="split-slash">/</span>
+                        <input class="course-date-picker" type="number" min="1" max="31" value="1">
+                    </div>
+                    <div class="form-in-row course-date-picker-wrapper">
+                        <span class="form-item-name">종강 날짜</span>
+                        <input class="course-date-picker" type="number" min="2019" max="2500" value="2020">
+                        <span class="split-slash">/</span>
+                        <input class="course-date-picker" type="number" min="1" max="12" value="1">
+                        <span class="split-slash">/</span>
+                        <input class="course-date-picker" type="number" min="1" max="31" value="1">
                     </div>
                     <div class="form-in-row">
                         <span class="form-item-name">최근 업데이트 날짜</span>
@@ -46,7 +62,7 @@
                         <span id="selected_subject_generated_date">-</span>
                     </div>
                     <div class="form-in-row">
-                        <input type="button" class="next-level-button" value="Next" id="">
+                        <input type="button" class="next-level-button" value="Next" id="register_userinfo_btn">
                     </div>
                 </div>
             </div>

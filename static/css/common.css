@@ -59,7 +59,7 @@
     font-family: inherit;
 }
 
-input[type=button]:focus{
+input:focus{
     outline: none;
 }
 
@@ -73,6 +73,16 @@ input[type=button]:active{
 
 input[type=button]:disabled{
     background-color: rgb(136, 136, 136);
+}
+
+input[type=number]{
+    background-color: transparent;
+    color: white;
+    border: none;
+    font-family: inherit;
+    font-size: 18px;
+    border-bottom: 2px solid rgb(207, 207, 207);
+    vertical-align: top;
 }
 
 .loading-bar{
