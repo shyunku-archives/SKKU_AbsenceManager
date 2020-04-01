@@ -1,12 +1,12 @@
 let disableAuthenticate = false;
-let selectedTimeTableSchedule = null;
+let savedTableBundle = null;
 
 $(() => {
     $('#verify_account_btn').on("click", fetchTimeTableInfo);
     $('#everytime_pw_input').on("keydown", (e) => {
         if(e.key == "Enter" && !disableAuthenticate) fetchTimeTableInfo();
     });
-    $('#register_userinfo_btn').on("click", registerUserInfo());
+    $('#register_userinfo_btn').on("click", registerUserInfo);
 });
 
 function fetchTimeTableInfo(){
@@ -33,6 +33,8 @@ function fetchTimeTableInfo(){
             if(status == 1000){
                 console.log(res);
                 const tables = res.tableData;
+                const semesterInfo = res.semesterData;
+                savedTableBundle = tables;
                 
                 deactiveBlurredDiv(timetableDecisionWrapper);
                 for(let i=0;i<tables.length;i++){
@@ -57,6 +59,27 @@ function fetchTimeTableInfo(){
                     }
                 });
 
+                const now = new Date();
+                const openDate = parseDate(semesterInfo.start_date);
+                const closeDate = parseDate(semesterInfo.end_date);
+                let openingYear = $('#course_open_year');
+                let closingYear = $('#course_close_year');
+
+                openingYear.val(openDate.y);
+                openingYear.attr('min', now.getFullYear());
+                openingYear.attr('max', now.getFullYear()+1);
+                $('#course_open_month').val(openDate.m);
+                $('#course_open_day').val(openDate.d);
+
+                closingYear.val(closeDate.y);
+                closingYear.attr('min', now.getFullYear());
+                closingYear.attr('max', now.getFullYear()+1);
+                $('#course_close_month').val(closeDate.m);
+                $('#course_close_day').val(closeDate.d);
+
+                $('#default_course_opening_date').text("(Default: "+semesterInfo.start_date+")");
+                $('#default_course_closing_date').text("(Default: "+semesterInfo.end_date+")");
+
                 $('#everytime_id_input').attr('disabled', true);
                 $('#everytime_pw_input').attr('disabled', true);
             }else{
@@ -76,6 +99,39 @@ function fetchTimeTableInfo(){
 }
 
 function registerUserInfo(){
+    //form 검사
+    const courseOpenDate = $('#course_open_year').val()+"-"+$('#course_open_month').val()+"-"+$('#course_open_day').val();
+    const courseCloseDate = $('#course_close_year').val()+"-"+$('#course_close_month').val()+"-"+$('#course_close_day').val();
+
+    const openDate = new Date(courseOpenDate);
+    const closeDate = new Date(courseCloseDate);
+
+    if(!openDate.isValid()){
+        alert('개강 날짜가 올바르지 않습니다: '+courseOpenDate);
+        return;
+    }
+
+    if(!closeDate.isValid()){
+        alert('종강 날짜가 올바르지 않습니다: '+courseCloseDate);
+        return;
+    }
+
+    if(openDate.getTime()> closeDate.getTime()){
+        alert('종강 날짜가 개강 날짜보다 이릅니다.');
+        return;
+    }
+
+    const selectedTableID = $('#timetable_candidate_selector option:selected').val();
+    let selectedTable = null;
+
+    for(let i=0;i<savedTableBundle.length;i++){
+        const elem = savedTableBundle[i];
+        if(elem.id == selectedTableID){
+            selectedTable = elem;
+            break;
+        }
+    }
+    
     //User Account Info 저장
     //TimeTable 저장
     $.ajax({
@@ -83,9 +139,21 @@ function registerUserInfo(){
         type: "POST",
         dataType: "json",
         data: {
+            everytimeAccount:{
+                id: $('#everytime_id_input').val(),
+                pw: $('#everytime_pw_input').val()
+            },
+            timetableInfo:{
+                name: $('#timetable_candidate_selector option:selected').text(),
+                id: selectedTableID,
+                openDate: courseOpenDate,
+                closeDate: courseCloseDate,
+                table: selectedTable
+            }
         },
         success: function(res){
            
         }
     });
 }
+

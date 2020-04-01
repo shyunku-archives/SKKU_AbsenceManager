@@ -26,7 +26,7 @@
                 <div class="loading-bar" id="load_timetable_list_bar">
                     <div class="bouncing-bar"></div>
                 </div>
-                <div class="form-wrapper" id="timetable_decision_wrapper">
+                <div class="form-wrapper blurred unfocusable" id="timetable_decision_wrapper">
                     <span class="form-title">Everytime 시간표 선택</span>
                     <div class="form-in-row">
                         <span class="form-item-name">시간표 선택</span>
@@ -39,19 +39,21 @@
                     </div>
                     <div class="form-in-row course-date-picker-wrapper">
                         <span class="form-item-name">개강 날짜</span>
-                        <input class="course-date-picker" type="number" min="2019" max="2500" value="2020">
+                        <input class="course-date-picker" type="number" min="2019" max="2500" value="2020" id="course_open_year">
                         <span class="split-slash">/</span>
-                        <input class="course-date-picker" type="number" min="1" max="12" value="1">
+                        <input class="course-date-picker" type="number" min="1" max="12" value="1" id="course_open_month">
                         <span class="split-slash">/</span>
-                        <input class="course-date-picker" type="number" min="1" max="31" value="1">
+                        <input class="course-date-picker" type="number" min="1" max="31" value="1" id="course_open_day">
+                        <span id="default_course_opening_date"></span>
                     </div>
                     <div class="form-in-row course-date-picker-wrapper">
                         <span class="form-item-name">종강 날짜</span>
-                        <input class="course-date-picker" type="number" min="2019" max="2500" value="2020">
+                        <input class="course-date-picker" type="number" min="2019" max="2500" value="2020" id="course_close_year">
                         <span class="split-slash">/</span>
-                        <input class="course-date-picker" type="number" min="1" max="12" value="1">
+                        <input class="course-date-picker" type="number" min="1" max="12" value="1" id="course_close_month">
                         <span class="split-slash">/</span>
-                        <input class="course-date-picker" type="number" min="1" max="31" value="1">
+                        <input class="course-date-picker" type="number" min="1" max="31" value="1" id="course_close_day">
+                        <span id="default_course_closing_date"></span>
                     </div>
                     <div class="form-in-row">
                         <span class="form-item-name">최근 업데이트 날짜</span>

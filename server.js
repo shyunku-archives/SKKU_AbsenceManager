@@ -10,6 +10,8 @@ app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+/* -------------------- GET -------------------- */
+
 app.get('/', async(req, res) => {
     let everytimeInfo = await crawl.get_everytime_data();
 
@@ -24,12 +26,18 @@ app.get('/account', (req, res) => {
     res.render('account');
 });
 
+/* -------------------- POST -------------------- */
+
 app.post('/authen', async(req, res) => {
     let everytime_id = req.body.ID;
     let everytime_pw = req.body.PW;
     let tableData = await crawl.get_timetable_list_data(everytime_id, everytime_pw);
 
     res.send(tableData);
+});
+
+app.post('/save-userinfo', async(req, res) => {
+    console.log(req.body);
 });
 
 app.listen(2700, () => {
