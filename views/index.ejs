@@ -151,7 +151,6 @@
                 const debugTimeOffset = 0*86400 + 0*3600 + 0 * 60 + 0;
                 let currentTimeOffset = (current.getDay()-1)*86400 + current.getHours()*3600 + current.getMinutes()*60 + current.getSeconds() +debugTimeOffset;
 
-
                 let debugTime = new Date();
                 debugTime.setTime(current.getTime() + debugTimeOffset * 1000 + 9*3600000);
                 let timeText = getTimeFormat();
