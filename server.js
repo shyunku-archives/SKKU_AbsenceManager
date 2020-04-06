@@ -16,13 +16,29 @@ app.use(express.urlencoded({extended: true}));
 app.get('/', async(req, res) => {
     fm.fetch_local_table_info((dat)=>{
         res.render('index', {
-            tableData: JSON.stringify(dat),
+            tableData: JSON.stringify(dat.table),
+            tableId: dat.tableId,
         });
     });
 });
 
 app.get('/account', (req, res) => {
     res.render('account');
+});
+
+app.get('/subject', (req, res) => {
+    let subject_id = req.query.sid;
+    let table_id = req.query.tid;
+    
+    fm.fetch_single_subject(table_id, subject_id, (code, dat)=>{
+        if(code == 1000){
+            res.render('subject',{
+                subjectInfo: JSON.stringify(dat),
+            });
+        }else{
+            throw new Error("Error occurred: "+code);
+        }
+    });
 });
 
 /* -------------------- POST -------------------- */

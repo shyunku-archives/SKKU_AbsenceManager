@@ -223,6 +223,10 @@
                             $('#date_list_'+index).append(`<th>${currentSubject.date_info.class_date[j].date}</th>`);
                             $('#attendance_list_'+index).append('<td></td>')
                         }
+
+                        $('#subject_summary_item_'+index).on("click", ()=>{
+                            location.href = `/subject?tid=<%= tableId %>&sid=${currentSubject.id}`;
+                        });
                     }
                 }
             }
@@ -245,7 +249,7 @@
             function initDivs(subSubjectNum){
                 for(let i=0;i<subSubjectNum;i++){
                     $('#subject_summary_list_wrapper').append(`
-                    <div class="subject-summary-item">
+                    <div class="subject-summary-item" id="subject_summary_item_${i}">
                         <div class="subject-item-info">
                             <span class="subject-item-name" id="subject_item_name_${i}">-</span>
                             <span class="subject-item-timeleft">-/-</span>

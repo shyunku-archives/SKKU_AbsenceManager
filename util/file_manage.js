@@ -42,6 +42,7 @@ exports.save_timetable_info = (data) => {
 exports.fetch_local_table_info = (callback) => {
     readJson("timetable.json", (res) => {
         const table = res.table;
+        const table_id = res.id;
         const new_table = [];
         for(let i=table.length-1;i>=0;i--){
             let class_info = table[i];
@@ -59,7 +60,27 @@ exports.fetch_local_table_info = (callback) => {
             return aX>bX?1:(bX>aX?-1:0);
         });
 
-        callback(new_table);
+        callback({
+            table: new_table,
+            tableId: table_id,
+        });
+    });
+}
+
+exports.fetch_single_subject = (tid, sid, callback) => {
+    readJson("account.json", (res) => {
+        if(res.timetable_id == tid){
+            readJson("timetable.json", (dat) => {
+                for(let i=0;i<dat.table.length;i++){
+                    if(dat.table[i].id == sid){
+                        callback(1000, dat.table[i]);
+                        return;
+                    }
+                }
+                callback(1005);
+            });
+        }else
+            callback(1004);
     });
 }
 

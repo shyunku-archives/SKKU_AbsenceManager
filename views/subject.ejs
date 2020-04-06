@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>과목 이름</title>
+        <%- include("parts/common_header.ejs") %>
+        <!-- <script type="text/javascript" src="js/account.js"></script> -->
+    </head>
+    <body>
+        <div id="body_content">
+            <div id="main_area">
+                <span class="main-title">과목 정보</span>
+                <hr>
+                <div class="form-wrapper">
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        let subjectJson = convertRawJson("<%= subjectInfo %>");
+        console.log(subjectJson);
+    </script>
+</html>
