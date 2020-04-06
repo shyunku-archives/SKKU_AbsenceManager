@@ -100,8 +100,8 @@ function fetchTimeTableInfo(){
 
 function registerUserInfo(){
     //form 검사
-    const courseOpenDate = $('#course_open_year').val()+"-"+$('#course_open_month').val()+"-"+$('#course_open_day').val();
-    const courseCloseDate = $('#course_close_year').val()+"-"+$('#course_close_month').val()+"-"+$('#course_close_day').val();
+    const courseOpenDate = $('#course_open_year').val()+"-"+pad($('#course_open_month').val(),2)+"-"+pad($('#course_open_day').val(),2);
+    const courseCloseDate = $('#course_close_year').val()+"-"+pad($('#course_close_month').val(),2)+"-"+pad($('#course_close_day').val(),2);
 
     const openDate = new Date(courseOpenDate);
     const closeDate = new Date(courseCloseDate);
@@ -132,6 +132,9 @@ function registerUserInfo(){
         }
     }
     
+    const saveTableInfoLoadingBar = $('#wait_save_info_bar');
+    $('#register_userinfo_btn').attr('disabled', true);
+    activateLoadingBar(saveTableInfoLoadingBar);
     //User Account Info 저장
     //TimeTable 저장
     $.ajax({
@@ -148,12 +151,17 @@ function registerUserInfo(){
                 id: selectedTableID,
                 openDate: courseOpenDate,
                 closeDate: courseCloseDate,
-                table: selectedTable
+                table: selectedTable.tableSchedule
             }
         },
         success: function(res){
-           
+            deactivateLoadingBar(saveTableInfoLoadingBar);
         }
     });
 }
 
+function pad(stri, len){
+    let str = stri+"";
+    while(str.length < len) str = "0"+str;
+    return str;
+}

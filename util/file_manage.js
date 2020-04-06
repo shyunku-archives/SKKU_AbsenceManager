@@ -1,0 +1,69 @@
+const fs = require('fs');
+
+exports.save_account_info = (data) => {
+    const json_str = JSON.stringify(data, null, 4);
+    writeJson("account.json", json_str, "Account data saved.");
+};
+
+exports.save_timetable_info = (data) => {
+    let class_date = null;
+    const start_date = new Date(data.openDate);
+    const end_date = new Date(data.closeDate);
+
+    for(let i=0;i<data.table.length;i++){
+        class_date = [];
+        const classTable = data.table[i];
+
+        for(let j=0, brk = false;; j++){
+            for(let k=0;k<classTable.timeIntervals.length;k++){
+                let day_addition = parseInt(classTable.timeIntervals[k].day) + 7*j;
+                let added_date = start_date.addDay(day_addition);
+                if(added_date.getTime() > end_date.getTime()){
+                    brk = true;
+                    break;
+                }
+                class_date.push({
+                    date: getDateString(added_date),
+                    attend_check: "none",
+                    attendance: "none",
+                });
+            }
+            if(brk)break;
+        }
+        data.table[i].date_info = {
+            class_times: classTable.timeIntervals.length,
+            class_date: class_date,
+        };
+    }
+    const json_str = JSON.stringify(data, null, 4);
+    writeJson("timetable.json", json_str, "Timetable Data overwritten.");
+};
+
+function writeJson(filename, data, success_msg){
+    fs.writeFile("./static/json/"+filename, data, 'utf8', function(err){
+        if(err) throw err;
+        console.log(success_msg);
+    });
+}
+
+function getDateString(date){
+    const year = date.getFullYear();
+    const month = date.getMonth()+1;
+    const day = date.getDate();
+    const dateString = year+"-"+pad(month, 2)+"-"+pad(day, 2);
+
+    return dateString;
+}
+
+Date.prototype.addDay = function(days){
+    let date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+
+    return date;
+}
+
+function pad(stri, len){
+    let str = stri+"";
+    while(str.length < len) str = "0"+str;
+    return str;
+}

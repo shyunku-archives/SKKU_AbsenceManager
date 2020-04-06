@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "nodemon -e js,ejs,css,json ./server.js"
+    "start": "nodemon -e js,ejs,css ./server.js"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",

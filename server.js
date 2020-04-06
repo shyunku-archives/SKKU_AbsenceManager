@@ -3,6 +3,7 @@ const app = express();
 const ejs = require('ejs');
 const path = require('path');
 const crawl = require('./util/crawling');
+const fm = require('./util/file_manage');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views'));
@@ -37,7 +38,19 @@ app.post('/authen', async(req, res) => {
 });
 
 app.post('/save-userinfo', async(req, res) => {
-    console.log(req.body);
+    const saveData = req.body;
+    console.log(saveData);
+    
+    let accountData = {
+        id: saveData.everytimeAccount.id,
+        pw: saveData.everytimeAccount.pw,
+        timetable_id: saveData.timetableInfo.id
+    };
+
+    fm.save_account_info(accountData);
+    fm.save_timetable_info(saveData.timetableInfo);
+
+    res.send({code: 1000});
 });
 
 app.listen(2700, () => {

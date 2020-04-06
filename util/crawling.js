@@ -34,11 +34,11 @@ const Subject = class{
         this.professorName = pf;
         this.id = id;
         this.code = code;
-        this.timeIntervals = null;
+        this.timeIntervals = [];
     }
 
-    setTimeInterval(data){
-        this.timeIntervals = data;
+    addTimeInterval(data){
+        this.timeIntervals.push(data);
     }
 
     get timeIntervalOffset(){
@@ -244,6 +244,7 @@ exports.get_timetable_list_data = async function(verify_id, verify_pw){
                 let pfname = subject.find('professor').attr('value');
 
                 const classInfo = new Subject(name, pfname, id, code);
+                const individualClassInfo = Object.assign(Object.create(Object.getPrototypeOf(classInfo)), classInfo);
 
                 const timeInfos = subject.find('data');
                 for(let k=0;k<timeInfos.length;k++){
@@ -255,10 +256,10 @@ exports.get_timetable_list_data = async function(verify_id, verify_pw){
 
                     let timeInterval = new SubjectTimeInterval(day, starttime, endtime, place);
 
-                    const individualClassInfo = Object.assign(Object.create(Object.getPrototypeOf(classInfo)), classInfo);
-                    individualClassInfo.setTimeInterval(timeInterval);
-                    classInfoBundle.push(individualClassInfo);
+                    
+                    individualClassInfo.addTimeInterval(timeInterval);
                 }
+                classInfoBundle.push(individualClassInfo);
             }
 
             classInfoBundle.sort((a,b) => {
@@ -291,7 +292,7 @@ function getCurrentDate(){
     const year = now.getFullYear();
     const month = now.getMonth()+1;
     const day = now.getDate();
-    const dateString = year+"-"+pad(month, 2)+"-"+pad(day, 2);
+    // const dateString = year+"-"+pad(month, 2)+"-"+pad(day, 2);
 
     return now.getTime();
 }
