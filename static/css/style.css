@@ -119,6 +119,7 @@ body{
 
 .subject-summary-item:hover{
     background-color: rgb(97, 97, 97);
+    cursor: pointer;
 }
 
 .next-class-timestamp{

@@ -23,7 +23,7 @@ exports.save_timetable_info = (data) => {
                     break;
                 }
                 class_date.push({
-                    date: getDateString(added_date),
+                    date: getShortDateString(added_date),
                     attend_check: "none",
                     attendance: "none",
                 });
@@ -39,11 +39,51 @@ exports.save_timetable_info = (data) => {
     writeJson("timetable.json", json_str, "Timetable Data overwritten.");
 };
 
+exports.fetch_local_table_info = (callback) => {
+    readJson("timetable.json", (res) => {
+        const table = res.table;
+        const new_table = [];
+        for(let i=table.length-1;i>=0;i--){
+            let class_info = table[i];
+            for(let j=0;j<class_info.timeIntervals.length;j++){
+                let single_interval = cloneJson(class_info);
+                delete single_interval.timeIntervals;
+                single_interval.timeInterval = class_info.timeIntervals[j];
+                new_table.push(single_interval);
+            }
+        }
+
+        new_table.sort((a,b) => {
+            let aX = int(a.timeInterval.day * 24 * 12) + int(a.timeInterval.start);
+            let bX = int(b.timeInterval.day * 24 * 12) + int(b.timeInterval.start);
+            return aX>bX?1:(bX>aX?-1:0);
+        });
+
+        callback(new_table);
+    });
+}
+
 function writeJson(filename, data, success_msg){
     fs.writeFile("./static/json/"+filename, data, 'utf8', function(err){
         if(err) throw err;
         console.log(success_msg);
     });
+}
+
+function readJson(filename, callback){
+    fs.readFile("./static/json/"+filename, 'utf8', function(err, data){
+        if(err) throw err;
+        callback(JSON.parse(data));
+    });
+}
+
+function getShortDateString(date){
+    const year = date.getFullYear();
+    const month = date.getMonth()+1;
+    const day = date.getDate();
+    const dateString = month+"/"+day;
+
+    return dateString;
 }
 
 function getDateString(date){
@@ -66,4 +106,12 @@ function pad(stri, len){
     let str = stri+"";
     while(str.length < len) str = "0"+str;
     return str;
+}
+
+function cloneJson(obj){
+    return JSON.parse(JSON.stringify(obj));
+}
+
+function int(str){
+    return parseInt(str);
 }

@@ -14,12 +14,10 @@ app.use(express.urlencoded({extended: true}));
 /* -------------------- GET -------------------- */
 
 app.get('/', async(req, res) => {
-    let everytimeInfo = await crawl.get_everytime_data();
-
-    res.render('index', {
-        tableData: JSON.stringify(everytimeInfo.classInfo),
-        semesterData: JSON.stringify(everytimeInfo.semesterInfo),
-        tableID: everytimeInfo.tableID,
+    fm.fetch_local_table_info((dat)=>{
+        res.render('index', {
+            tableData: JSON.stringify(dat),
+        });
     });
 });
 
@@ -39,7 +37,6 @@ app.post('/authen', async(req, res) => {
 
 app.post('/save-userinfo', async(req, res) => {
     const saveData = req.body;
-    console.log(saveData);
     
     let accountData = {
         id: saveData.everytimeAccount.id,

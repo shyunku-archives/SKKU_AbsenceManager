@@ -155,7 +155,14 @@ function registerUserInfo(){
             }
         },
         success: function(res){
+            const status = res.code;
             deactivateLoadingBar(saveTableInfoLoadingBar);
+
+            if(status == 1000){
+                location.href = "/";
+            }else{
+                $('#register_userinfo_btn').attr('disabled', false);
+            }
         }
     });
 }

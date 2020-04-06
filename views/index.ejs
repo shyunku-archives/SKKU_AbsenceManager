@@ -130,13 +130,9 @@
         <button id="side_menu_opener">menu</button>
         <script>
             let tableJson = convertRawJson("<%= tableData %>");
-            let semesterData = convertRawJson("<%= semesterData %>");
-            let timeTableID = "<%= tableID %>";
-            const weekCount = 16;
             
             const constTableInfo = [];
             let tableInfo = [];
-            let dateTable = [];
 
             for(let i=0;i<tableJson.length;i++){
                 constTableInfo.push(tableJson[i]);
@@ -148,15 +144,7 @@
                 setInterval(function(){
                     evaluateTables(tableInfo);
                 },1000);
-                console.log(semesterData);
-                console.log(timeTableID);
-                updateTableInfo(semesterData, tableID);
             });
-
-            function getDateTableInfo(){
-                const current = new Date();
-                let firstDate = 0;
-            }
 
             function evaluateTables(tableInfo){
                 let current = new Date();
@@ -186,18 +174,18 @@
 
                 for(let i=0;i<upperIndex;i++){
                     let nextWeekClass = $.extend(true, {}, tableInfo[i]);
-                    nextWeekClass.timeIntervals.day += 7;
+                    nextWeekClass.timeInterval.day += 7;
                     resortedTable.push(nextWeekClass);
                 }
 
                 //resort complete
                 let focusedSubject = resortedTable[0];
 
-
                 //main subject setting
                 $('#main_subject_name').text(focusedSubject.name);
                 $('#main_subject_professor').text(focusedSubject.professorName + " 교수님");
-                $('#main_subject_room_number').text(focusedSubject.timeIntervals.place);
+                $('#main_subject_room_number').text(focusedSubject.timeInterval.place);
+
                 //수업 남은시간도 별개로 표시
                 let diff = getTimeIntervalOffset(focusedSubject).start - currentTimeOffset;
                 if(diff >= 0){
@@ -213,26 +201,29 @@
                     let currentSubject = resortedTable[i];
 
                     $('#subject_item_name_'+index).text(currentSubject.name);
-                    $('#subject_item_room_'+index).text(currentSubject.professorName+" 교수님 - "+currentSubject.timeIntervals.place+"호");
+                    $('#subject_item_room_'+index).text(currentSubject.professorName+" 교수님 - "
+                        +currentSubject.timeInterval.place+"호 ("+getDateName(currentSubject.timeInterval.day)+"요일)");
                     diff = getTimeIntervalOffset(currentSubject).start - currentTimeOffset;
                     $('#next_class_remain_time_'+index).text("다음 수업까지 "+getTimeFormatString(diff)+" 남음");
 
                     let dateListDivChildren = $('#date_list_'+index+" th");
                     let weekListDivChildren = $('#week_list_'+index+" th");
                     let attendanceListDivChildren = $('#attendance_list_'+index+" td");
-                    let dateNum = getDateCountSubject(currentSubject.name);
+                    let dateNum = currentSubject.date_info.class_times;
                     let currentLen = dateListDivChildren.length;
+                    let classNum = currentSubject.date_info.class_date.length;
 
-                    if(dateNum*weekCount != currentLen){
+                    if(classNum != currentLen){
+                        weekListDivChildren.remove();
                         dateListDivChildren.remove();
                         attendanceListDivChildren.remove();
-                        for(let j=0;j<dateNum*weekCount;j++){
-                            $('#date_list_'+index).append(`<th></th>`);
+                        for(let j=0;j<parseInt((classNum-1)/dateNum) + 1;j++){
+                            $('#week_list_'+index).append(`<th colspan=${dateNum}>${j+1}주차</th>`);
+                        }
+                        for(let j=0;j<classNum;j++){
+                            $('#date_list_'+index).append(`<th>${currentSubject.date_info.class_date[j].date}</th>`);
                             $('#attendance_list_'+index).append('<td></td>')
                         }
-                        weekListDivChildren.each(function(ind, child){
-                            $(child).attr('colspan', dateNum);
-                        });
                     }
                 }
             }
@@ -247,8 +238,8 @@
 
             function getTimeIntervalOffset(obj){
                 return {
-                        start: obj.timeIntervals.day * 86400 + obj.timeIntervals.start * 5 * 60,
-                        end: obj.timeIntervals.day * 86400 + obj.timeIntervals.end * 5 * 60,
+                        start: obj.timeInterval.day * 86400 + obj.timeInterval.start * 5 * 60,
+                        end: obj.timeInterval.day * 86400 + obj.timeInterval.end * 5 * 60,
                     };
             }
 
@@ -268,22 +259,6 @@
                             </div>
                             <table class="attendance-table" width="420">
                                 <tr class="week-info" id="week_list_${i}">
-                                    <th colspan="2">1주차</th>
-                                    <th colspan="2">2주차</th>
-                                    <th colspan="2">3주차</th>
-                                    <th colspan="2">4주차</th>
-                                    <th colspan="2">5주차</th>
-                                    <th colspan="2">6주차</th>
-                                    <th colspan="2">7주차</th>
-                                    <th colspan="2">8주차</th>
-                                    <th colspan="2">9주차</th>
-                                    <th colspan="2">10주차</th>
-                                    <th colspan="2">11주차</th>
-                                    <th colspan="2">12주차</th>
-                                    <th colspan="2">13주차</th>
-                                    <th colspan="2">14주차</th>
-                                    <th colspan="2">15주차</th>
-                                    <th colspan="2">16주차</th>
                                 </tr>
                                 <tr class="date-info" id="date_list_${i}">
                                 </tr>
@@ -294,6 +269,11 @@
                     </div>`
                     );
                 }
+            }
+
+            function getDateName(date){
+                const dateName = ["월", "화", "수", "목", "금", "토", "일"];
+                return dateName[date%7];
             }
 
             function getTimeFormat(diff){
