@@ -20,10 +20,11 @@ body{
     width: 250px;
     height: 100%;
     top: 0;
-    left: 0px;
+    left: -230px;
     padding: 10px;
-    background-color: black;
+    background: linear-gradient(to right, #000000, transparent 80%, transparent);
     font-family: 'Nanum Gothic', sans-serif;
+    text-align: left;
 }
 
 .narrow-font{
@@ -289,11 +290,6 @@ body{
     text-shadow: 0 0 20px rgba(0, 255, 55, 0.288);
 }
 
-#left_side_menu div{
-    text-align: left;
-    padding: 3px 0;
-}
-
 #current_date{
     font-size: 1.2em;
 }
@@ -305,8 +301,8 @@ body{
 #current_sec{
     position: absolute;
     font-size: 1.3em;
-    bottom: 11px;
-    color: rgb(155, 155, 155);
+    bottom: 0;
+    color: rgb(136, 136, 136);
 }
 
 #current_time_split{
@@ -318,11 +314,12 @@ body{
     position: relative;
     display: inline-block;
     height: 100%;
+    min-width: 25px;
     vertical-align: top;
 }
 
 .time_info_segment span{
-    display: block;
+    display: inline-block;
 }
 
 #current_time_wrapper{
@@ -331,4 +328,52 @@ body{
     height: 70px;
     padding: 5px 0;
     box-sizing: border-box;
+}
+
+#mainmenu_list{
+    display: inline-block;
+    width: 100%;
+    /* border-top: 1px solid rgb(177, 177, 177); */
+    padding: 20px 5px;
+    margin-top: 10px;
+
+    box-sizing: border-box;
+}
+
+.mainmenu-item{
+    padding: 10px 5px;
+}
+
+.mainmenu-item a{
+    font-size: 1.1em;
+}
+
+.mainmenu-item a:hover{
+    font-size: 1.4em;
+    text-shadow: 0 0 10px red;
+    transition: ease-in-out 0.08s;
+}
+
+.undeveloped text{
+    color: rgb(138, 0, 0);
+}
+
+#develop_info_wrapper{
+    position: absolute;
+    display: inline-block;
+    width: 100%;
+
+    padding: 5px;
+    padding-bottom: 30px;
+
+    left: 0;
+    bottom: 0;
+
+    box-sizing: border-box;
+    font-size: 0.7em;
+}
+
+#develop_info_wrapper span{
+    display: block;
+    padding: 2px 0;
 }
