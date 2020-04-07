@@ -15,6 +15,7 @@ app.use(express.urlencoded({extended: true}));
 
 app.get('/', async(req, res) => {
     fm.fetch_local_table_info((dat)=>{
+        console.log("Fetched local table info");
         res.render('index', {
             tableData: JSON.stringify(dat.table),
             tableId: dat.tableId,

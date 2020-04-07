@@ -7,8 +7,15 @@
     <body>
         <div id="body_content">
             <div id="main_area">
-                <span class="main-title">과목 정보</span>
-                <hr>
+                <div class="main-form-wrapper">
+                    <span class="main-title" id="subject_name">-</span>
+                    <span class="sub-title-right narrow-font" id="subject_room">34356</span>
+                </div>
+                <div class="main-subform-wrapper">
+                    <span class="subject-info-item professor-name-color" id="subject_professor_name">- 교수님</span
+                    ><span class="subject-info-item room-number-color" id="subject_room_name">-호</span
+                    ><span class="subject-info-item remain-class-time-color">- 남음</span>
+                </div>
                 <div class="form-wrapper">
                 </div>
             </div>
@@ -16,6 +23,14 @@
     </body>
     <script>
         let subjectJson = convertRawJson("<%= subjectInfo %>");
+
+        $('#subject_name').text(subjectJson.name);
+        $('#subject_professor_name').text(subjectJson.professorName+" 교수님");
+        $('#subject_room_name').text(subjectJson.timeIntervals[0].place+"호");
+        for(let i=0;i<subjectJson.timeIntervals.length;i++){
+            $(`<span class="subject-info-item class-date-color">${getDateName(subjectJson.timeIntervals[i].day)}요일</span>`)
+            .insertBefore($('#subject_room_name'));
+        }
         console.log(subjectJson);
     </script>
 </html>

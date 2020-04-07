@@ -15,13 +15,15 @@ body{
     margin-top: 30px;
 }
 
-#side_menu{
+#left_side_menu{
     position: fixed;
-    width: 400px;
+    width: 250px;
     height: 100%;
     top: 0;
-    left: -400px;
+    left: 0px;
+    padding: 10px;
     background-color: black;
+    font-family: 'Nanum Gothic', sans-serif;
 }
 
 .narrow-font{
@@ -48,7 +50,7 @@ body{
 
 .main-subject-name{
     font-size: 90px;
-    text-shadow: 0 0 20px red;
+    text-shadow: 0 0 10px rgba(51, 255, 0, 0.452);
 }
 
 .main-subject-professor{
@@ -258,4 +260,75 @@ body{
 
 .course-date-picker-wrapper .split-slash{
     font-size: 25px;
+}
+
+.subject-info-item{
+    padding: 5px;
+    font-size: 22px;
+    border-radius: 8px;
+    margin-right: 5px;
+}
+
+.professor-name-color{
+    border: 3px solid rgb(36, 222, 255);
+}
+
+.class-date-color{
+    border: 3px solid rgb(0, 241, 12);
+}
+
+.remain-class-time-color{
+    border: 3px solid rgb(255, 81, 0);
+}
+
+.room-number-color{
+    border: 3px solid rgb(212, 0, 255);
+}
+
+#subject_name{
+    text-shadow: 0 0 20px rgba(0, 255, 55, 0.288);
+}
+
+#left_side_menu div{
+    text-align: left;
+    padding: 3px 0;
+}
+
+#current_date{
+    font-size: 1.2em;
+}
+
+#current_time{
+    font-size: 4.0em;
+}
+
+#current_sec{
+    position: absolute;
+    font-size: 1.3em;
+    bottom: 11px;
+    color: rgb(155, 155, 155);
+}
+
+#current_time_split{
+    position: absolute;
+    top: 7px;
+}
+
+.time_info_segment{
+    position: relative;
+    display: inline-block;
+    height: 100%;
+    vertical-align: top;
+}
+
+.time_info_segment span{
+    display: block;
+}
+
+#current_time_wrapper{
+    display: inline-block;
+    width: 100%;
+    height: 70px;
+    padding: 5px 0;
+    box-sizing: border-box;
 }

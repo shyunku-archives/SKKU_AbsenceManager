@@ -4,7 +4,6 @@
         <title>출첵 현황</title>
         <%- include("parts/common_header.ejs") %>
         <script type="text/javascript" src="js/canvas.js"></script>
-        <script type="text/javascript" src="js/table_setting.js"></script>
     </head>
     <body>
         <div id="body_content">
@@ -120,204 +119,190 @@
                 </div>
             </div>
             <div id="subject_summary_list_wrapper">
-
             </div>
         </div>
-        
-        <div id="side_menu" class="active">
-            <div>-</div>
-        </div>
+        <%- include("parts/common_left_sidemenu.ejs") %>
         <button id="side_menu_opener">menu</button>
-        <script>
-            let tableJson = convertRawJson("<%= tableData %>");
-            
-            const constTableInfo = [];
-            let tableInfo = [];
-
-            for(let i=0;i<tableJson.length;i++){
-                constTableInfo.push(tableJson[i]);
-            }
-
-            $(function(){
-                tableInfo = [...constTableInfo];
-                initDivs(tableInfo.length-1);
-                setInterval(function(){
-                    evaluateTables(tableInfo);
-                },1000);
-            });
-
-            function evaluateTables(tableInfo){
-                let current = new Date();
-                const debugTimeOffset = 0*86400 + 0*3600 + 0 * 60 + 0;
-                let currentTimeOffset = (current.getDay()-1)*86400 + current.getHours()*3600 + current.getMinutes()*60 + current.getSeconds() +debugTimeOffset;
-
-                let debugTime = new Date();
-                debugTime.setTime(current.getTime() + debugTimeOffset * 1000 + 9*3600000);
-                let timeText = getTimeFormat();
-                $('#side_menu > div').text(debugTime.toUTCString());
-
-                const resortedTable = [];
-                let upperIndex = tableInfo.length;
-                let determined = false;
-
-                for(let i=0;i<tableInfo.length;i++){
-                    let endTime = getTimeIntervalOffset(tableInfo[i]).end;
-                    if(endTime > currentTimeOffset){
-                        resortedTable.push(tableInfo[i]);
-                        if(!determined){
-                            determined = true;
-                            upperIndex = i;
-                        }
-                    }
-                }
-
-                for(let i=0;i<upperIndex;i++){
-                    let nextWeekClass = $.extend(true, {}, tableInfo[i]);
-                    nextWeekClass.timeInterval.day += 7;
-                    resortedTable.push(nextWeekClass);
-                }
-
-                //resort complete
-                let focusedSubject = resortedTable[0];
-
-                //main subject setting
-                $('#main_subject_name').text(focusedSubject.name);
-                $('#main_subject_professor').text(focusedSubject.professorName + " 교수님");
-                $('#main_subject_room_number').text(focusedSubject.timeInterval.place);
-
-                //수업 남은시간도 별개로 표시
-                let diff = getTimeIntervalOffset(focusedSubject).start - currentTimeOffset;
-                if(diff >= 0){
-                    $('#main_subject_remainer').text("다음 수업까지 "+getTimeFormatString(diff)+" 남음");
-                }else{
-                    diff = getTimeIntervalOffset(focusedSubject).end - currentTimeOffset;
-                    $('#main_subject_remainer').text("현재 수업시간 "+getTimeFormatString(diff)+" 남음");
-                }
-
-                //sub subjects setting
-                for(let i=1;i<resortedTable.length;i++){
-                    let index = i-1;
-                    let currentSubject = resortedTable[i];
-
-                    $('#subject_item_name_'+index).text(currentSubject.name);
-                    $('#subject_item_room_'+index).text(currentSubject.professorName+" 교수님 - "
-                        +currentSubject.timeInterval.place+"호 ("+getDateName(currentSubject.timeInterval.day)+"요일)");
-                    diff = getTimeIntervalOffset(currentSubject).start - currentTimeOffset;
-                    $('#next_class_remain_time_'+index).text("다음 수업까지 "+getTimeFormatString(diff)+" 남음");
-
-                    let dateListDivChildren = $('#date_list_'+index+" th");
-                    let weekListDivChildren = $('#week_list_'+index+" th");
-                    let attendanceListDivChildren = $('#attendance_list_'+index+" td");
-                    let dateNum = currentSubject.date_info.class_times;
-                    let currentLen = dateListDivChildren.length;
-                    let classNum = currentSubject.date_info.class_date.length;
-
-                    if(classNum != currentLen){
-                        weekListDivChildren.remove();
-                        dateListDivChildren.remove();
-                        attendanceListDivChildren.remove();
-                        for(let j=0;j<parseInt((classNum-1)/dateNum) + 1;j++){
-                            $('#week_list_'+index).append(`<th colspan=${dateNum}>${j+1}주차</th>`);
-                        }
-                        for(let j=0;j<classNum;j++){
-                            $('#date_list_'+index).append(`<th>${currentSubject.date_info.class_date[j].date}</th>`);
-                            $('#attendance_list_'+index).append('<td></td>')
-                        }
-
-                        $('#subject_summary_item_'+index).on("click", ()=>{
-                            location.href = `/subject?tid=<%= tableId %>&sid=${currentSubject.id}`;
-                        });
-                    }
-                }
-            }
-
-            function getDateCountSubject(subjectName){
-                let count = 0;
-                for(let i=0;i<tableInfo.length;i++){
-                    if(tableInfo[i].name == subjectName)count++;
-                }
-                return count;
-            }
-
-            function getTimeIntervalOffset(obj){
-                return {
-                        start: obj.timeInterval.day * 86400 + obj.timeInterval.start * 5 * 60,
-                        end: obj.timeInterval.day * 86400 + obj.timeInterval.end * 5 * 60,
-                    };
-            }
-
-            function initDivs(subSubjectNum){
-                for(let i=0;i<subSubjectNum;i++){
-                    $('#subject_summary_list_wrapper').append(`
-                    <div class="subject-summary-item" id="subject_summary_item_${i}">
-                        <div class="subject-item-info">
-                            <span class="subject-item-name" id="subject_item_name_${i}">-</span>
-                            <span class="subject-item-timeleft">-/-</span>
-                            <span class="next-class-timestamp">결석 -회</span>
-                        </div>
-                        <div class="subject-item-summary">
-                            <div class="subject-info-summary">
-                                <span class="subject-item-room" id="subject_item_room_${i}">- 교수님 - -호</span>
-                                <span class="next-class-remain-time" id="next_class_remain_time_${i}">다음 수업까지 -시간 -분 -초 남음</span>
-                            </div>
-                            <table class="attendance-table" width="420">
-                                <tr class="week-info" id="week_list_${i}">
-                                </tr>
-                                <tr class="date-info" id="date_list_${i}">
-                                </tr>
-                                <tr class="attendance-info" id="attendance_list_${i}">
-                                </tr>
-                            </table>
-                        </div>
-                    </div>`
-                    );
-                }
-            }
-
-            function getDateName(date){
-                const dateName = ["월", "화", "수", "목", "금", "토", "일"];
-                return dateName[date%7];
-            }
-
-            function getTimeFormat(diff){
-                if(diff<0) diff = -diff;
-                let days = parseInt(diff/(3600*24))
-                let hours = parseInt((diff%(3600*24))/3600);
-                let mins = parseInt((diff%3600)/60);
-                let secs = parseInt(diff%60);
-                return {
-                    d: days,
-                    h: hours,
-                    m: mins,
-                    s: secs,
-                }
-            }
-
-            function getTimeFormatString(diff){
-                let format = getTimeFormat(diff);
-                let dayStr = format.d + "일 ";
-                let hourStr = format.h + "시간 ";
-                let minStr = format.m + "분 ";
-                let secStr = format.s + "초";
-
-                let finalStr = "";
-                let connect = false;
-                if(format.d > 0){
-                    finalStr += dayStr;
-                    connect = true;
-                }
-                if(format.h > 0 || connect){
-                    finalStr += hourStr;
-                    connect = true;
-                }
-                if(format.m > 0 || connect){
-                    finalStr += minStr;
-                    connect = true;
-                }
-                finalStr += secStr;
-
-                return finalStr;
-            }
-        </script>
     </body>
+    <script>
+        let tableJson = convertRawJson("<%= tableData %>");
+        
+        const constTableInfo = [];
+        let tableInfo = [];
+
+        for(let i=0;i<tableJson.length;i++){
+            constTableInfo.push(tableJson[i]);
+        }
+
+        $(function(){
+            tableInfo = [...constTableInfo];
+            initDivs(tableInfo.length-1);
+            setInterval(function(){
+                evaluateTables(tableInfo);
+            },1000);
+        });
+
+        function evaluateTables(tableInfo){
+            let current = new Date();
+            const debugTimeOffset = 0*86400 + 0*3600 + 0 * 60 + 0;
+            let currentTimeOffset = (current.getDay()-1)*86400 + current.getHours()*3600 + current.getMinutes()*60 + current.getSeconds() +debugTimeOffset;
+
+            const resortedTable = [];
+            let upperIndex = tableInfo.length;
+            let determined = false;
+
+            for(let i=0;i<tableInfo.length;i++){
+                let endTime = getTimeIntervalOffset(tableInfo[i]).end;
+                if(endTime > currentTimeOffset){
+                    resortedTable.push(tableInfo[i]);
+                    if(!determined){
+                        determined = true;
+                        upperIndex = i;
+                    }
+                }
+            }
+
+            for(let i=0;i<upperIndex;i++){
+                let nextWeekClass = $.extend(true, {}, tableInfo[i]);
+                nextWeekClass.timeInterval.day += 7;
+                resortedTable.push(nextWeekClass);
+            }
+
+            //resort complete
+            let focusedSubject = resortedTable[0];
+
+            //main subject setting
+            $('#main_subject_name').text(focusedSubject.name);
+            $('#main_subject_professor').text(focusedSubject.professorName + " 교수님");
+            $('#main_subject_room_number').text(focusedSubject.timeInterval.place);
+
+            //수업 남은시간도 별개로 표시
+            let diff = getTimeIntervalOffset(focusedSubject).start - currentTimeOffset;
+            if(diff >= 0){
+                $('#main_subject_remainer').text("다음 수업까지 "+getTimeFormatString(diff)+" 남음");
+            }else{
+                diff = getTimeIntervalOffset(focusedSubject).end - currentTimeOffset;
+                $('#main_subject_remainer').text("현재 수업시간 "+getTimeFormatString(diff)+" 남음");
+            }
+
+            //sub subjects setting
+            for(let i=1;i<resortedTable.length;i++){
+                let index = i-1;
+                let currentSubject = resortedTable[i];
+
+                $('#subject_item_name_'+index).text(currentSubject.name);
+                $('#subject_item_room_'+index).text(currentSubject.professorName+" 교수님 - "
+                    +currentSubject.timeInterval.place+"호 ("+getDateName(currentSubject.timeInterval.day)+"요일)");
+                diff = getTimeIntervalOffset(currentSubject).start - currentTimeOffset;
+                $('#next_class_remain_time_'+index).text("다음 수업까지 "+getTimeFormatString(diff)+" 남음");
+
+                let dateListDivChildren = $('#date_list_'+index+" th");
+                let weekListDivChildren = $('#week_list_'+index+" th");
+                let attendanceListDivChildren = $('#attendance_list_'+index+" td");
+                let dateNum = currentSubject.date_info.class_times;
+                let currentLen = dateListDivChildren.length;
+                let classNum = currentSubject.date_info.class_date.length;
+
+                if(classNum != currentLen){
+                    weekListDivChildren.remove();
+                    dateListDivChildren.remove();
+                    attendanceListDivChildren.remove();
+                    for(let j=0;j<parseInt((classNum-1)/dateNum) + 1;j++){
+                        $('#week_list_'+index).append(`<th colspan=${dateNum}>${j+1}주차</th>`);
+                    }
+                    for(let j=0;j<classNum;j++){
+                        $('#date_list_'+index).append(`<th>${currentSubject.date_info.class_date[j].date}</th>`);
+                        $('#attendance_list_'+index).append('<td></td>')
+                    }
+
+                    $('#subject_summary_item_'+index).on("click", ()=>{
+                        location.href = `/subject?tid=<%= tableId %>&sid=${currentSubject.id}`;
+                    });
+                }
+            }
+        }
+
+        function getDateCountSubject(subjectName){
+            let count = 0;
+            for(let i=0;i<tableInfo.length;i++){
+                if(tableInfo[i].name == subjectName)count++;
+            }
+            return count;
+        }
+
+        function getTimeIntervalOffset(obj){
+            return {
+                    start: obj.timeInterval.day * 86400 + obj.timeInterval.start * 5 * 60,
+                    end: obj.timeInterval.day * 86400 + obj.timeInterval.end * 5 * 60,
+                };
+        }
+
+        function initDivs(subSubjectNum){
+            for(let i=0;i<subSubjectNum;i++){
+                $('#subject_summary_list_wrapper').append(`
+                <div class="subject-summary-item" id="subject_summary_item_${i}">
+                    <div class="subject-item-info">
+                        <span class="subject-item-name" id="subject_item_name_${i}">-</span>
+                        <span class="subject-item-timeleft">-/-</span>
+                        <span class="next-class-timestamp">결석 -회</span>
+                    </div>
+                    <div class="subject-item-summary">
+                        <div class="subject-info-summary">
+                            <span class="subject-item-room" id="subject_item_room_${i}">- 교수님 - -호</span>
+                            <span class="next-class-remain-time" id="next_class_remain_time_${i}">다음 수업까지 -시간 -분 -초 남음</span>
+                        </div>
+                        <table class="attendance-table" width="420">
+                            <tr class="week-info" id="week_list_${i}">
+                            </tr>
+                            <tr class="date-info" id="date_list_${i}">
+                            </tr>
+                            <tr class="attendance-info" id="attendance_list_${i}">
+                            </tr>
+                        </table>
+                    </div>
+                </div>`
+                );
+            }
+        }
+
+        function getTimeFormat(diff){
+            if(diff<0) diff = -diff;
+            let days = parseInt(diff/(3600*24))
+            let hours = parseInt((diff%(3600*24))/3600);
+            let mins = parseInt((diff%3600)/60);
+            let secs = parseInt(diff%60);
+            return {
+                d: days,
+                h: hours,
+                m: mins,
+                s: secs,
+            }
+        }
+
+        function getTimeFormatString(diff){
+            let format = getTimeFormat(diff);
+            let dayStr = format.d + "일 ";
+            let hourStr = format.h + "시간 ";
+            let minStr = format.m + "분 ";
+            let secStr = format.s + "초";
+
+            let finalStr = "";
+            let connect = false;
+            if(format.d > 0){
+                finalStr += dayStr;
+                connect = true;
+            }
+            if(format.h > 0 || connect){
+                finalStr += hourStr;
+                connect = true;
+            }
+            if(format.m > 0 || connect){
+                finalStr += minStr;
+                connect = true;
+            }
+            finalStr += secStr;
+
+            return finalStr;
+        }
+    </script>
 </html>

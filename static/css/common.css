@@ -1,5 +1,5 @@
 .main-title{
-    display: block;
+    display: inline-block;
     font-size: 90px;
 }
 
@@ -9,7 +9,25 @@
     padding: 10px 20px;
     background-color: rgb(70, 70, 70);
     box-sizing: border-box;
-    margin-top: 15px;
+    margin-top: 10px;
+}
+
+.sub-title-right{
+    float: right;
+    vertical-align: bottom;
+    font-size: 90px;
+    color: rgb(121, 121, 121);
+}
+
+.main-subform-wrapper{
+    display: inline-block;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.main-form-wrapper{
+    display: inline-block;
+    width: 100%;
 }
 
 .form-title{
