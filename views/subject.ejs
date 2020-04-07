@@ -2,21 +2,31 @@
     <head>
         <title>과목 이름</title>
         <%- include("parts/common_header.ejs") %>
-        <!-- <script type="text/javascript" src="js/account.js"></script> -->
+        <script type="text/javascript" src="lib/chart.js"></script>
+        <script type="text/javascript" src="js/subject.js"></script>
     </head>
     <body>
         <div id="body_content">
             <div id="main_area">
                 <div class="main-form-wrapper">
                     <span class="main-title" id="subject_name">-</span>
-                    <span class="sub-title-right narrow-font" id="subject_room">34356</span>
+                    <span class="sub-title-right narrow-font" id="subject_room_name">-</span>
                 </div>
                 <div class="main-subform-wrapper">
                     <span class="subject-info-item professor-name-color" id="subject_professor_name">- 교수님</span
-                    ><span class="subject-info-item room-number-color" id="subject_room_name">-호</span
-                    ><span class="subject-info-item remain-class-time-color">- 남음</span>
+                    ><span class="subject-info-item room-number-color" id="subject_haksu">-호</span
+                    ><span class="subject-info-item remain-class-time-color" id="subject_remainer">- 남음</span>
                 </div>
                 <div class="form-wrapper">
+                    <div class="grid-wrapper">
+                        <div id="subject_summary_grid">
+                            <span class="grid-title">요약</span>
+                            <hr>
+                            <div id="summary_chart_wrapper">
+                                <canvas id="summary_chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -25,13 +35,15 @@
     <script>
         let subjectJson = convertRawJson("<%= subjectInfo %>");
 
+        $('#subject_room_name').text(subjectJson.timeIntervals[0].place);
         $('#subject_name').text(subjectJson.name);
         $('#subject_professor_name').text(subjectJson.professorName+" 교수님");
-        $('#subject_room_name').text(subjectJson.timeIntervals[0].place+"호");
+        $('#subject_haksu').text(subjectJson.code);
         for(let i=0;i<subjectJson.timeIntervals.length;i++){
             $(`<span class="subject-info-item class-date-color">${getDateName(subjectJson.timeIntervals[i].day)}요일</span>`)
-            .insertBefore($('#subject_room_name'));
+            .insertBefore($('#subject_remainer'));
         }
+        showSummaryChart(subjectJson.date_info.class_date);
         console.log(subjectJson);
     </script>
 </html>

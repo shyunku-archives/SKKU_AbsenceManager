@@ -155,3 +155,21 @@ option{
     background-color: transparent;
     color: black;
 }
+
+.grid-wrapper{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* grid-template-rows: repeat(2, 1fr); */
+    gap: 5px;
+}
+
+.grid-wrapper > div{
+    background-color: rgb(110, 110, 110);
+    padding: 10px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.grid-title{
+    font-size: 30px;
+}

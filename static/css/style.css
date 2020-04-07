@@ -377,3 +377,14 @@ body{
     display: block;
     padding: 2px 0;
 }
+
+#subject_summary_grid{
+    grid-row: 1;
+    grid-column: 1;
+}
+
+#summary_chart_wrapper{
+    width: 100px;
+    height: 100px;
+    /* border: 1px solid red; */
+}
