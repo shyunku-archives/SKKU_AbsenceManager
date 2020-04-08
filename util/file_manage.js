@@ -1,8 +1,13 @@
 const fs = require('fs');
 
-exports.save_account_info = (data) => {
+exports.save_icampus_account_info = (data) => {
     const json_str = JSON.stringify(data, null, 4);
-    writeJson("account.json", json_str, "Account data saved.");
+    writeJson("account-icampus.json", json_str, "iCampus Account data saved.");
+};
+
+exports.save_everytime_account_info = (data) => {
+    const json_str = JSON.stringify(data, null, 4);
+    writeJson("account-everytime.json", json_str, "Everytime Account data saved.");
 };
 
 exports.save_timetable_info = (data) => {

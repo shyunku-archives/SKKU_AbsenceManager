@@ -64,7 +64,7 @@ app.post('/authen-icampus', async(req, res) => {
     });
 });
 
-app.post('/save-userinfo', async(req, res) => {
+app.post('/save_everytime_account', async(req, res) => {
     const saveData = req.body;
     
     let accountData = {
@@ -73,8 +73,22 @@ app.post('/save-userinfo', async(req, res) => {
         timetable_id: saveData.timetableInfo.id
     };
 
-    fm.save_account_info(accountData);
+    fm.save_everytime_account_info(accountData);
     fm.save_timetable_info(saveData.timetableInfo);
+
+    res.send({code: 1000});
+});
+
+app.post('/save_icampus_account', async(req, res) => {
+    const saveData = req.body;
+    console.log(saveData);
+    
+    let accountData = {
+        id: saveData.ID,
+        pw: saveData.PW,
+    };
+
+    fm.save_icampus_account_info(accountData);
 
     res.send({code: 1000});
 });

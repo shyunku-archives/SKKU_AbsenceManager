@@ -4,7 +4,6 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 
-let accountInfo;
 const everytimeHomeURL = "https://everytime.kr";
 const icampusHomeURL = "https://icampus.skku.edu/";
 const everytimeUrlBundle = {
@@ -45,6 +44,9 @@ const Subject = class{
         return this.timeIntervals.day * 86400 + this.timeIntervals.endtime * 5 * 60;
     }
 };
+
+/* ----------------- Declaration ----------------- */
+let icampusPage = null;
 
 exports.get_timetable_list_data = async function(verify_id, verify_pw){
     const browser = await puppeteer.launch({
@@ -177,16 +179,16 @@ exports.get_timetable_list_data = async function(verify_id, verify_pw){
 
 exports.authen_icampus_account = async function(verify_id, verify_pw, callback){
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
     });
 
-    const page = await browser.newPage();
-    await page.setViewport({
+    icampusPage = await browser.newPage();
+    await icampusPage.setViewport({
         width: 1920,
         height: 1080
     });
 
-    page.on('dialog', async(dialog) => {
+    icampusPage.on('dialog', async(dialog) => {
         const message = dialog.message();
         if(message.includes("사용자 인증에 실패하였습니다.")){
             dialog.accept();
@@ -194,20 +196,24 @@ exports.authen_icampus_account = async function(verify_id, verify_pw, callback){
         }
     });
 
-    await page.goto(icampusUrlBundle.login);
-    await page.evaluate((id, pw) => {
+    await icampusPage.goto(icampusUrlBundle.login);
+    await icampusPage.evaluate((id, pw) => {
         document.querySelector('input[name="login_user_id"]').value = id;
         document.querySelector('input[name="login_user_password"]').value = pw;
     }, verify_id, verify_pw);
-    await page.click('button[id="btnLoginBtn"]');
+    await icampusPage.click('button[id="btnLoginBtn"]');
 
-    await page.waitForNavigation();
+    await icampusPage.waitForNavigation();
 
-    let response = await page.goto(icampusUrlBundle.courseList);
-    let body = await response.text();
-    console.log(body);
+    let response = await icampusPage.goto(icampusUrlBundle.courseList);
+    let text = await response.text();
+    let refined = text.indexOf('[');
+    let extracted = text.substring(refined);
 
-    callback({code: 1000});
+    callback({
+        code: 1000,
+        courseInfo: JSON.parse(extracted),
+    });
 }
 
 function getCurrentDate(){

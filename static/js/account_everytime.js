@@ -159,6 +159,7 @@ function registerUserInfo(){
             deactivateLoadingBar(saveTableInfoLoadingBar);
 
             if(status == 1000){
+                alert('에브리타임 설정이 완료되었습니다.');
                 location.href = "/";
             }else{
                 $('#register_userinfo_btn').attr('disabled', false);

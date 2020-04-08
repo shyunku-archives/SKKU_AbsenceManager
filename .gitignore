@@ -1,4 +1,5 @@
 node_modules
 architecture.png
-static/json/account.json
+static/json/account-icampus.json
+static/json/account-everytime.json
 static/json/timetable.json

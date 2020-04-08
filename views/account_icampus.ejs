@@ -27,45 +27,13 @@
                 <div class="loading-bar" id="icampus_authen_bar">
                     <div class="bouncing-bar"></div>
                 </div>
-                <div class="form-wrapper blurred unfocusable" id="timetable_decision_wrapper">
-                    <span class="form-title">Everytime 시간표 선택</span>
+                <div class="form-wrapper blurred unfocusable" id="load_icampus_courses_wrapper">
+                    <span class="form-title">정보 받아오는 중...</span>
                     <div class="form-in-row">
-                        <span class="form-item-name">시간표 선택</span>
-                        <select id="timetable_candidate_selector">
-                        </select>
+                        <span class="form-item-name" id="found_course_num">과목 -개 찾음</span>
                     </div>
                     <div class="form-in-row">
-                        <span class="form-item-name">ID</span>
-                        <span id="selected_subject_id">-</span>
-                    </div>
-                    <div class="form-in-row course-date-picker-wrapper">
-                        <span class="form-item-name">개강 날짜</span>
-                        <input class="course-date-picker" type="number" min="2019" max="2500" value="2020" id="course_open_year">
-                        <span class="split-slash">/</span>
-                        <input class="course-date-picker" type="number" min="1" max="12" value="1" id="course_open_month">
-                        <span class="split-slash">/</span>
-                        <input class="course-date-picker" type="number" min="1" max="31" value="1" id="course_open_day">
-                        <span id="default_course_opening_date"></span>
-                    </div>
-                    <div class="form-in-row course-date-picker-wrapper">
-                        <span class="form-item-name">종강 날짜</span>
-                        <input class="course-date-picker" type="number" min="2019" max="2500" value="2020" id="course_close_year">
-                        <span class="split-slash">/</span>
-                        <input class="course-date-picker" type="number" min="1" max="12" value="1" id="course_close_month">
-                        <span class="split-slash">/</span>
-                        <input class="course-date-picker" type="number" min="1" max="31" value="1" id="course_close_day">
-                        <span id="default_course_closing_date"></span>
-                    </div>
-                    <div class="form-in-row">
-                        <span class="form-item-name">최근 업데이트 날짜</span>
-                        <span id="selected_subject_recent_update_date">-</span>
-                    </div>
-                    <div class="form-in-row">
-                        <span class="form-item-name">생성 날짜</span>
-                        <span id="selected_subject_generated_date">-</span>
-                    </div>
-                    <div class="form-in-row">
-                        <input type="button" class="next-level-button" value="Next" id="register_userinfo_btn">
+                        <input type="button" class="next-level-button" value="Finish" id="finish_icampus_setting">
                     </div>
                 </div>
                 <div class="loading-bar" id="wait_save_info_bar">
