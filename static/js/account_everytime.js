@@ -19,7 +19,7 @@ function fetchTimeTableInfo(){
     const id = $('#everytime_id_input').val();
     const pw = $('#everytime_pw_input').val();
     $.ajax({
-        url: "/authen",
+        url: "/authen-everytime",
         type: "POST",
         dataType: "json",
         data: {

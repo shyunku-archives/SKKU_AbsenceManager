@@ -346,16 +346,22 @@ body{
 
 .mainmenu-item a{
     font-size: 1.1em;
+    color: rgb(221, 221, 221);
 }
 
-.mainmenu-item a:hover{
+.mainmenu-item.undeveloped a{
+    color: rgb(110, 110, 110);
+}
+
+.mainmenu-item.undeveloped a:before{
+    content: attr(title) ": asdfff";
+}
+
+.mainmenu-item:not(.undeveloped) a:hover{
     font-size: 1.4em;
     text-shadow: 0 0 10px red;
     transition: ease-in-out 0.08s;
-}
-
-.undeveloped text{
-    color: rgb(138, 0, 0);
+    color: white;
 }
 
 #develop_info_wrapper{

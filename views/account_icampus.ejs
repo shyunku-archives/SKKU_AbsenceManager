@@ -1,0 +1,78 @@
+<html>
+    <head>
+        <title>아이캠퍼스 설정</title>
+        <%- include("parts/common_header.ejs") %>
+        <script type="text/javascript" src="js/account_icampus.js"></script>
+    </head>
+    <body>
+        <div id="body_content">
+            <div id="main_area">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/40/Sungkyunkwan_University_seal.svg/1200px-Sungkyunkwan_University_seal.svg.png" height="80px" style="margin-right: 10px;">
+                <span class="main-title">아이캠퍼스 설정</span>
+                <hr>
+                <div class="form-wrapper">
+                    <span class="form-title">아이캠퍼스 로그인</span>
+                    <div class="form-in-row">
+                        <span class="form-item-name">아이디</span>
+                        <input class="form-input" id="icampus_id_input" spellcheck="false">
+                    </div>
+                    <div class="form-in-row">
+                        <span class="form-item-name" >비밀번호</span>
+                        <input class="form-input" type="password" id="icampus_pw_input" spellcheck="false">
+                    </div>
+                    <div class="form-in-row">
+                        <input type="button" class="next-level-button" value="Next" id="verify_account_btn">
+                    </div>
+                </div>
+                <div class="loading-bar" id="icampus_authen_bar">
+                    <div class="bouncing-bar"></div>
+                </div>
+                <div class="form-wrapper blurred unfocusable" id="timetable_decision_wrapper">
+                    <span class="form-title">Everytime 시간표 선택</span>
+                    <div class="form-in-row">
+                        <span class="form-item-name">시간표 선택</span>
+                        <select id="timetable_candidate_selector">
+                        </select>
+                    </div>
+                    <div class="form-in-row">
+                        <span class="form-item-name">ID</span>
+                        <span id="selected_subject_id">-</span>
+                    </div>
+                    <div class="form-in-row course-date-picker-wrapper">
+                        <span class="form-item-name">개강 날짜</span>
+                        <input class="course-date-picker" type="number" min="2019" max="2500" value="2020" id="course_open_year">
+                        <span class="split-slash">/</span>
+                        <input class="course-date-picker" type="number" min="1" max="12" value="1" id="course_open_month">
+                        <span class="split-slash">/</span>
+                        <input class="course-date-picker" type="number" min="1" max="31" value="1" id="course_open_day">
+                        <span id="default_course_opening_date"></span>
+                    </div>
+                    <div class="form-in-row course-date-picker-wrapper">
+                        <span class="form-item-name">종강 날짜</span>
+                        <input class="course-date-picker" type="number" min="2019" max="2500" value="2020" id="course_close_year">
+                        <span class="split-slash">/</span>
+                        <input class="course-date-picker" type="number" min="1" max="12" value="1" id="course_close_month">
+                        <span class="split-slash">/</span>
+                        <input class="course-date-picker" type="number" min="1" max="31" value="1" id="course_close_day">
+                        <span id="default_course_closing_date"></span>
+                    </div>
+                    <div class="form-in-row">
+                        <span class="form-item-name">최근 업데이트 날짜</span>
+                        <span id="selected_subject_recent_update_date">-</span>
+                    </div>
+                    <div class="form-in-row">
+                        <span class="form-item-name">생성 날짜</span>
+                        <span id="selected_subject_generated_date">-</span>
+                    </div>
+                    <div class="form-in-row">
+                        <input type="button" class="next-level-button" value="Next" id="register_userinfo_btn">
+                    </div>
+                </div>
+                <div class="loading-bar" id="wait_save_info_bar">
+                    <div class="bouncing-bar"></div>
+                </div>
+            </div>
+        </div>
+        <%- include("parts/common_left_sidemenu.ejs") %>
+    </body>
+</html>

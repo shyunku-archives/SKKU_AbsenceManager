@@ -1,6 +1,8 @@
 .main-title{
     display: inline-block;
     font-size: 90px;
+    line-height: 90px;
+    vertical-align: top;
 }
 
 .form-wrapper{

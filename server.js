@@ -23,8 +23,12 @@ app.get('/', async(req, res) => {
     });
 });
 
-app.get('/account', (req, res) => {
-    res.render('account');
+app.get('/account-everytime', (req, res) => {
+    res.render('account_everytime');
+});
+
+app.get('/account-icampus', (req, res) => {
+    res.render('account_icampus');
 });
 
 app.get('/subject', (req, res) => {
@@ -44,12 +48,20 @@ app.get('/subject', (req, res) => {
 
 /* -------------------- POST -------------------- */
 
-app.post('/authen', async(req, res) => {
+app.post('/authen-everytime', async(req, res) => {
     let everytime_id = req.body.ID;
     let everytime_pw = req.body.PW;
     let tableData = await crawl.get_timetable_list_data(everytime_id, everytime_pw);
 
     res.send(tableData);
+});
+
+app.post('/authen-icampus', async(req, res) => {
+    let everytime_id = req.body.ID;
+    let everytime_pw = req.body.PW;
+    crawl.authen_icampus_account(everytime_id, everytime_pw, function(pass){
+        res.send(pass);
+    });
 });
 
 app.post('/save-userinfo', async(req, res) => {

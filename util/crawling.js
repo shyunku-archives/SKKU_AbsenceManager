@@ -5,19 +5,19 @@ const path = require('path');
 const util = require('util');
 
 let accountInfo;
-const homeURL = "https://everytime.kr";
-const urlBundle = {
-    login: homeURL + "/login",
-    authenticate: homeURL + "/user/login",
-    timetable: homeURL + "/timetable",
-    accountInfo: "json/account.json",
-};
-
-const responseURL = {
+const everytimeHomeURL = "https://everytime.kr";
+const icampusHomeURL = "https://icampus.skku.edu/";
+const everytimeUrlBundle = {
+    login: everytimeHomeURL + "/login",
     currentSemesterResponse: "https://api.everytime.kr/find/timetable/table/list/semester",
     tableResponse: "https://api.everytime.kr/find/timetable/table",
     SemesterListResponse: "https://api.everytime.kr/find/timetable/subject/semester/list",
-}
+};
+const icampusUrlBundle = {
+    login: icampusHomeURL + "/login",
+    dashboard: icampusHomeURL + "/lms",
+    courseList: "https://canvas.skku.edu/api/v1/users/self/favorites/courses?include[]=term&exclude[]=enrollments",
+};
 
 const SubjectTimeInterval = class{
     constructor(day, starttime, endtime, place){
@@ -65,7 +65,7 @@ exports.get_timetable_list_data = async function(verify_id, verify_pw){
         }
     });
 
-    await page.goto(urlBundle.login);
+    await page.goto(everytimeUrlBundle.login);
     await page.evaluate((id, pw) => {
         document.querySelector('input[name="userid"]').value = id;
         document.querySelector('input[name="password"]').value = pw;
@@ -73,7 +73,7 @@ exports.get_timetable_list_data = async function(verify_id, verify_pw){
 
     await page.click('input[value="로그인"]');
 
-    let response = await page.goto(responseURL.SemesterListResponse);
+    let response = await page.goto(everytimeUrlBundle.SemesterListResponse);
     let body = await response.text();
 
     if(body == "A server error occurred and the content cannot be displayed."){
@@ -108,7 +108,7 @@ exports.get_timetable_list_data = async function(verify_id, verify_pw){
     if(currentSemester == null){
         return {code: 1003};
     }else{
-        response = await page.goto(responseURL.currentSemesterResponse+"?year="+currentSemester.year+"&semester="+currentSemester.semester);
+        response = await page.goto(everytimeUrlBundle.currentSemesterResponse+"?year="+currentSemester.year+"&semester="+currentSemester.semester);
         let body = await response.text();
         $ = cheerio.load(body);
         const $tables = $('table');
@@ -120,7 +120,7 @@ exports.get_timetable_list_data = async function(verify_id, verify_pw){
 
             let classInfoBundle = [];
 
-            response = await page.goto(responseURL.tableResponse+"?id="+tableID);
+            response = await page.goto(everytimeUrlBundle.tableResponse+"?id="+tableID);
             body = await response.text();
             $ = cheerio.load(body);
             const subjects = $('subject');
@@ -175,13 +175,43 @@ exports.get_timetable_list_data = async function(verify_id, verify_pw){
     }
 }
 
+exports.authen_icampus_account = async function(verify_id, verify_pw, callback){
+    const browser = await puppeteer.launch({
+        headless: false,
+    });
+
+    const page = await browser.newPage();
+    await page.setViewport({
+        width: 1920,
+        height: 1080
+    });
+
+    page.on('dialog', async(dialog) => {
+        const message = dialog.message();
+        if(message.includes("사용자 인증에 실패하였습니다.")){
+            dialog.accept();
+            callback({code: 1006});
+        }
+    });
+
+    await page.goto(icampusUrlBundle.login);
+    await page.evaluate((id, pw) => {
+        document.querySelector('input[name="login_user_id"]').value = id;
+        document.querySelector('input[name="login_user_password"]').value = pw;
+    }, verify_id, verify_pw);
+    await page.click('button[id="btnLoginBtn"]');
+
+    await page.waitForNavigation();
+
+    let response = await page.goto(icampusUrlBundle.courseList);
+    let body = await response.text();
+    console.log(body);
+
+    callback({code: 1000});
+}
 
 function getCurrentDate(){
     const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth()+1;
-    const day = now.getDate();
-    // const dateString = year+"-"+pad(month, 2)+"-"+pad(day, 2);
 
     return now.getTime();
 }
@@ -191,18 +221,3 @@ function pad(stri, len){
     while(str.length < len) str = "0"+str;
     return str;
 }
-
-let getUserAccountInfoFromFileStream = () => {
-    const filePath = path.join(__dirname, '../static/json/account.json');
-    return new Promise((resolve, reject) => {
-        fs.readFile(filePath, {encoding: 'utf-8'}, function(err, data){
-            if(!err){
-                accountInfo = JSON.parse(data);
-                console.log("Local Account Info accepted.");
-            }else{
-                console.log(err);
-            }
-            resolve();
-        });
-    });
-};

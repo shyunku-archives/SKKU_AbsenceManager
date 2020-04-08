@@ -4,5 +4,6 @@
     "1002": "Failed to fetch timetable candidates: no matched tables",
     "1003": "Failed to fetch timetable candidates: currently not in semester",
     "1004": "Failed to fetch single subject info: table ID doesn't match",
-    "1005": "Failed to fetch single subject info: no such subject"
+    "1005": "Failed to fetch single subject info: no such subject",
+    "1006": "Failed to authenticate with icampus: wrong ID or PW",
 }
