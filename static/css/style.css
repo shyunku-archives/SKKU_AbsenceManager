@@ -353,10 +353,6 @@ body{
     color: rgb(110, 110, 110);
 }
 
-.mainmenu-item.undeveloped a:before{
-    content: attr(title) ": asdfff";
-}
-
 .mainmenu-item:not(.undeveloped) a:hover{
     font-size: 1.4em;
     text-shadow: 0 0 10px red;
