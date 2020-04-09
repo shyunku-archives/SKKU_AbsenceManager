@@ -11,6 +11,7 @@ app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+
 /* -------------------- GET -------------------- */
 
 app.get('/', async(req, res) => {
@@ -81,7 +82,6 @@ app.post('/save_everytime_account', async(req, res) => {
 
 app.post('/save_icampus_account', async(req, res) => {
     const saveData = req.body;
-    console.log(saveData);
     
     let accountData = {
         id: saveData.ID,
@@ -91,6 +91,12 @@ app.post('/save_icampus_account', async(req, res) => {
     fm.save_icampus_account_info(accountData);
 
     res.send({code: 1000});
+});
+
+//page not found
+
+app.use((req, res, next)=>{
+    res.render('not_found');
 });
 
 app.listen(2700, () => {

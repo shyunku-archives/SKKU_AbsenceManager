@@ -10,6 +10,7 @@ $(()=>{
 
 function authenticateIcampus(){
     const authenIcampusAccountLoadingBar = $('#icampus_authen_bar');
+    const courseListWrapper = $('#found_course_list_wrapper');
     $('#verify_account_btn').attr('disabled', true);
     disableAuthenticate = true;
     activateLoadingBar(authenIcampusAccountLoadingBar);
@@ -34,6 +35,12 @@ function authenticateIcampus(){
                 $('#icampus_id_input').attr('disabled', true);
                 $('#icampus_pw_input').attr('disabled', true);
                 $('#found_course_num').text(`과목 ${res.courseInfo.length}개 찾음`);
+                courseListWrapper.empty();
+                for(let i=0;i<res.courseInfo.length;i++){
+                    courseListWrapper.append(`
+                    <span class="form-item-name block-span">${res.courseInfo[i].name}</span>
+                    `);
+                }
             }else{
                 console.error("Error occurred: code "+status);
                 switch(status){

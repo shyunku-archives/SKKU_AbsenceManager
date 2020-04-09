@@ -247,7 +247,6 @@ body{
 #main_area{
     display: inline-block;
     width: 100%;
-    min-height: 500px;
     background-color: rgb(58, 58, 58);
     padding: 20px 30px;
     text-align: left;

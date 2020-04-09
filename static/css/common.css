@@ -175,3 +175,7 @@ option{
 .grid-title{
     font-size: 30px;
 }
+
+.block-span{
+    display: block;
+}
