@@ -17,9 +17,14 @@ const icampusUrlBundle = {
     dashboard: icampusHomeURL + "/lms",
     courseList: "https://canvas.skku.edu/api/v1/users/self/favorites/courses?include[]=term&exclude[]=enrollments",
     getStudentID:{
-        seg0: "https://canvas.skku.edu/courses/",
+        seg0: "https://canvas.skku.edu/courses/",   // + course id
         seg1: "/external_tools/1",
-        //any course id betw seg0/seg1
+    },
+    getCourseInfo:{
+        seg0: "https://canvas.skku.edu/learningx/api/v1/courses/",  // + course id
+        seg1: "/allcomponents_db?user_id=",                         // + user id
+        seg2: "&user_login=",                                       // + user student id
+        seg3: "&role=1",
     }
 };
 
@@ -217,6 +222,7 @@ exports.authen_icampus_account = async function(verify_id, verify_pw, callback){
     let courseList = JSON.parse(extracted)
     let studentID = "unknown";
     let studentName = "unknown";
+    let userID = "unknown";         //unique 한지 check 필요
 
     if(extracted.length > 0){
         let anyCourse = courseList[0].id;
@@ -226,6 +232,7 @@ exports.authen_icampus_account = async function(verify_id, verify_pw, callback){
         studentID = $('#custom_canvas_user_login_id').attr('value');
         let rawStudentName = $('#custom_user_name_full').attr('value');
         studentName = getPreText(rawStudentName, '(');
+        userID = $('#custom_user_id').attr('value');
     }else{
         console.log("Couldn't fetch Student Id/Name because course list is empty.");
     }
@@ -235,8 +242,34 @@ exports.authen_icampus_account = async function(verify_id, verify_pw, callback){
         courseInfo: courseList,
         studentID: studentID,
         studentName: studentName,
+        userID: userID,
     });
 }
+
+exports.get_icampus_mirror_main_databundle = async function(section, callback){
+    //page null
+
+    //session expired
+    if(false){}
+
+    await icampusPage.waitForNavigation();
+
+    switch(section){
+        case undefined:
+        case "courses":
+            //fetch uncompleted courses list
+
+            break;
+        case "assignments":
+            //fetch uncompleted assignments list
+            break;
+        case "Announcements":
+            //fetch uncompleted assignments list
+            break;
+    }
+}
+
+/* -------------------- Internal function -------------------- */
 
 
 /* -------------------- User function -------------------- */

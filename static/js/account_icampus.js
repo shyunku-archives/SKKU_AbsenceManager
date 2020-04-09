@@ -1,4 +1,5 @@
 let disableAuthenticate = false;
+let coursesList = null;
 
 $(()=>{
     $('#verify_account_btn').on("click", authenticateIcampus);
@@ -39,11 +40,19 @@ function authenticateIcampus(){
                 $('#student_name_str').text(`이름: ${res.studentName}`);
                 if(res.studentID != "unknown") $('#student_id').attr('value', res.studentID);
                 if(res.studentName != "unknown") $('#student_name').attr('value', res.studentName);
+                if(res.userID != "unknown") $('#user_id').attr('value', res.userID);
                 courseListWrapper.empty();
+
+                coursesList = [];
                 for(let i=0;i<res.courseInfo.length;i++){
                     courseListWrapper.append(`
                     <span class="form-item-name block-span">${res.courseInfo[i].name}</span>
                     `);
+
+                    coursesList.push({
+                        id: res.courseInfo[i].id,
+                        name: res.courseInfo[i].name,
+                    });
                 }
             }else{
                 console.error("Error occurred: code "+status);
@@ -73,6 +82,8 @@ function saveIcampusAccount(){
             PW: icampusPW,
             studentID: $('#student_id').attr('value'),
             studentName: $('#student_name').attr('value'),
+            userID: $('#user_id').attr('value'),
+            courseInfo: coursesList,
         },
         success: function(res){
             const status = res.code;

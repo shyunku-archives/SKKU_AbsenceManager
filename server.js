@@ -36,19 +36,15 @@ app.get('/account-icampus', (req, res) => {
 
 app.get('/icampus', (req, res) => {
     let section = req.query.section;
-    switch(section){
-        case undefined:
-        case "courses":
-            //fetch uncompleted courses list
-            break;
-        case "assignments":
-            //fetch uncompleted assignments list
-            break;
-        case "Announcements":
-            //fetch uncompleted assignments list
-            break;
-    }
-    res.render('icampus_home');
+    fm.fetch_icampus_account_info((res2)=>{
+        fm.fetch_icampus_course_info((res3)=>{
+            let student_info = res2;
+            let course_list = res3;
+            crawl.get_icampus_mirror_main_databundle(()=>{
+                res.render('icampus_home');
+            });
+        });
+    });
 });
 
 app.get('/subject', (req, res) => {
@@ -106,9 +102,11 @@ app.post('/save_icampus_account', async(req, res) => {
         pw: saveData.PW,
         student_id: saveData.studentID,
         student_name: saveData.studentName,
+        user_id: saveData.userID,
     };
 
     fm.save_icampus_account_info(accountData);
+    fm.save_icampus_courses_info(saveData.courseInfo);
 
     res.send({code: 1000});
 });

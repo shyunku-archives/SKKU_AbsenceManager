@@ -1,8 +1,14 @@
 const fs = require('fs');
 
+/* -------------------- save -------------------- */
 exports.save_icampus_account_info = (data) => {
     const json_str = JSON.stringify(data, null, 4);
     writeJson("account-icampus.json", json_str, "iCampus Account data saved.");
+};
+
+exports.save_icampus_courses_info = (data) => {
+    const json_str = JSON.stringify(data, null, 4);
+    writeJson("courses.json", json_str, "iCampus Courses data saved.");
 };
 
 exports.save_everytime_account_info = (data) => {
@@ -44,6 +50,9 @@ exports.save_timetable_info = (data) => {
     writeJson("timetable.json", json_str, "Timetable Data overwritten.");
 };
 
+
+/* -------------------- fetch -------------------- */
+
 exports.fetch_local_table_info = (callback) => {
     readJson("timetable.json", (res) => {
         const table = res.table;
@@ -73,7 +82,7 @@ exports.fetch_local_table_info = (callback) => {
 }
 
 exports.fetch_single_subject = (tid, sid, callback) => {
-    readJson("account.json", (res) => {
+    readJson("account-everytime.json", (res) => {
         if(res.timetable_id == tid){
             readJson("timetable.json", (dat) => {
                 for(let i=0;i<dat.table.length;i++){
@@ -88,6 +97,23 @@ exports.fetch_single_subject = (tid, sid, callback) => {
             callback(1004);
     });
 }
+
+exports.fetch_icampus_account_info = (callback) => {
+    readJson("account-icampus.json", (res) => {
+        callback({
+            studentID: res.student_id,
+            studentName: res.student_name,
+        });
+    });
+}
+
+exports.fetch_icampus_course_info = (callback) => {
+    readJson("account-icampus.json", (res) => {
+        callback(res);
+    });
+}
+
+/* -------------------- user function -------------------- */
 
 function writeJson(filename, data, success_msg){
     fs.writeFile("./static/json/"+filename, data, 'utf8', function(err){
