@@ -16,6 +16,11 @@ const icampusUrlBundle = {
     login: icampusHomeURL + "/login",
     dashboard: icampusHomeURL + "/lms",
     courseList: "https://canvas.skku.edu/api/v1/users/self/favorites/courses?include[]=term&exclude[]=enrollments",
+    getStudentID:{
+        seg0: "https://canvas.skku.edu/courses/",
+        seg1: "/external_tools/1",
+        //any course id betw seg0/seg1
+    }
 };
 
 const SubjectTimeInterval = class{
@@ -209,12 +214,32 @@ exports.authen_icampus_account = async function(verify_id, verify_pw, callback){
     let text = await response.text();
     let refined = text.indexOf('[');
     let extracted = text.substring(refined);
+    let courseList = JSON.parse(extracted)
+    let studentID = "unknown";
+    let studentName = "unknown";
+
+    if(extracted.length > 0){
+        let anyCourse = courseList[0].id;
+        response = await icampusPage.goto(icampusUrlBundle.getStudentID.seg0+anyCourse+icampusUrlBundle.getStudentID.seg1);
+        const resbody = await response.text();
+        const $ = cheerio.load(resbody);
+        studentID = $('#custom_canvas_user_login_id').attr('value');
+        let rawStudentName = $('#custom_user_name_full').attr('value');
+        studentName = getPreText(rawStudentName, '(');
+    }else{
+        console.log("Couldn't fetch Student Id/Name because course list is empty.");
+    }
 
     callback({
         code: 1000,
-        courseInfo: JSON.parse(extracted),
+        courseInfo: courseList,
+        studentID: studentID,
+        studentName: studentName,
     });
 }
+
+
+/* -------------------- User function -------------------- */
 
 function getCurrentDate(){
     const now = new Date();
@@ -226,4 +251,9 @@ function pad(stri, len){
     let str = stri+"";
     while(str.length < len) str = "0"+str;
     return str;
+}
+
+function getPreText(str, c){
+    const seq = str.split(c);
+    return seq[0];
 }

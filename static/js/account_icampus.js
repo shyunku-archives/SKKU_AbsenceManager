@@ -35,6 +35,10 @@ function authenticateIcampus(){
                 $('#icampus_id_input').attr('disabled', true);
                 $('#icampus_pw_input').attr('disabled', true);
                 $('#found_course_num').text(`과목 ${res.courseInfo.length}개 찾음`);
+                $('#student_id_str').text(`학번: ${res.studentID}`);
+                $('#student_name_str').text(`이름: ${res.studentName}`);
+                if(res.studentID != "unknown") $('#student_id').attr('value', res.studentID);
+                if(res.studentName != "unknown") $('#student_name').attr('value', res.studentName);
                 courseListWrapper.empty();
                 for(let i=0;i<res.courseInfo.length;i++){
                     courseListWrapper.append(`
@@ -67,6 +71,8 @@ function saveIcampusAccount(){
         data: {
             ID: icampusID,
             PW: icampusPW,
+            studentID: $('#student_id').attr('value'),
+            studentName: $('#student_name').attr('value'),
         },
         success: function(res){
             const status = res.code;

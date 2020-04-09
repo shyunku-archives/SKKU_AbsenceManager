@@ -4,13 +4,15 @@ const ejs = require('ejs');
 const path = require('path');
 const crawl = require('./util/crawling');
 const fm = require('./util/file_manage');
+const favicon = require('serve-favicon');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views'));
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-
+app.use(favicon(path.join(__dirname, 'static', 'img', 'favicon.ico')));
+// app.use('/favicon.ico', express.static('img/favicon.ico'));
 
 /* -------------------- GET -------------------- */
 
@@ -30,6 +32,23 @@ app.get('/account-everytime', (req, res) => {
 
 app.get('/account-icampus', (req, res) => {
     res.render('account_icampus');
+});
+
+app.get('/icampus', (req, res) => {
+    let section = req.query.section;
+    switch(section){
+        case undefined:
+        case "courses":
+            //fetch uncompleted courses list
+            break;
+        case "assignments":
+            //fetch uncompleted assignments list
+            break;
+        case "Announcements":
+            //fetch uncompleted assignments list
+            break;
+    }
+    res.render('icampus_home');
 });
 
 app.get('/subject', (req, res) => {
@@ -58,9 +77,9 @@ app.post('/authen-everytime', async(req, res) => {
 });
 
 app.post('/authen-icampus', async(req, res) => {
-    let everytime_id = req.body.ID;
-    let everytime_pw = req.body.PW;
-    crawl.authen_icampus_account(everytime_id, everytime_pw, function(pass){
+    let icampus_id = req.body.ID;
+    let icampus_pw = req.body.PW;
+    crawl.authen_icampus_account(icampus_id, icampus_pw, function(pass){
         res.send(pass);
     });
 });
@@ -82,10 +101,11 @@ app.post('/save_everytime_account', async(req, res) => {
 
 app.post('/save_icampus_account', async(req, res) => {
     const saveData = req.body;
-    
     let accountData = {
         id: saveData.ID,
         pw: saveData.PW,
+        student_id: saveData.studentID,
+        student_name: saveData.studentName,
     };
 
     fm.save_icampus_account_info(accountData);
@@ -94,7 +114,6 @@ app.post('/save_icampus_account', async(req, res) => {
 });
 
 //page not found
-
 app.use((req, res, next)=>{
     res.render('not_found');
 });
