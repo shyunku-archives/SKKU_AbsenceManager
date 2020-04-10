@@ -100,15 +100,12 @@ exports.fetch_single_subject = (tid, sid, callback) => {
 
 exports.fetch_icampus_account_info = (callback) => {
     readJson("account-icampus.json", (res) => {
-        callback({
-            studentID: res.student_id,
-            studentName: res.student_name,
-        });
+        callback(res);
     });
 }
 
 exports.fetch_icampus_course_info = (callback) => {
-    readJson("account-icampus.json", (res) => {
+    readJson("courses.json", (res) => {
         callback(res);
     });
 }

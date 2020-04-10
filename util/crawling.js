@@ -246,19 +246,98 @@ exports.authen_icampus_account = async function(verify_id, verify_pw, callback){
     });
 }
 
-exports.get_icampus_mirror_main_databundle = async function(section, callback){
-    //page null
+exports.get_icampus_mirror_main_databundle = async function(section, studentInfo, courseList, callback){
+    //page null test
+    if(icampusPage == null){
+        console.log("iCampus Page is null, Generate new one");
+        const browser = await puppeteer.launch({
+            headless: false,
+        });
+        icampusPage = await browser.newPage();
+        await icampusPage.setViewport({
+            width: 1920,
+            height: 1080
+        });
+        await login_icampus_account(studentInfo.id, studentInfo.pw);
+    }else{
+        //session expired test
+        try{
+            await icampusPage.goto(icampusHomeURL);
+        }catch(err){
+            console.log("iCampus Page session is expired, Log in.");
+            await login_icampus_account(studentInfo.id, studentInfo.pw);
+        }
+    }
 
-    //session expired
-    if(false){}
-
-    await icampusPage.waitForNavigation();
+    let fetchData = [];
 
     switch(section){
-        case undefined:
         case "courses":
             //fetch uncompleted courses list
+            for(let i=1;i<2;i++){
+                let requestURL = `https://canvas.skku.edu/courses/${courseList[i].id}/external_tools/1`;
+                await icampusPage.goto(requestURL);  
+                await icampusPage.waitFor(500);              
+                let innerFrameContent = await icampusPage.evaluate(() => {
+                    let content = document.querySelector('#tool_content')
+                        .contentDocument.documentElement.innerHTML;
+                    return content;
+                });
+                let body = innerFrameContent;
+                let $ = cheerio.load(body);
+                let courseSections = $('.xncl-section-container .xn-section');
 
+                let sectionList = [];
+                for(let j=0;j<courseSections.length;j++){
+                    const section = $(courseSections[j]);
+                    let subSections = section.find('.xns-subsection-container .xn-subsection-learn');               //각 섹션 당 차시들
+                    let subsectionStartDateElem = section.find('.xnslh-section-opendate-date');
+                    let subsectionStartDateStr = subsectionStartDateElem.text();
+                    let subsectionStartDate = parseDateString(subsectionStartDateStr);
+                    let subsectionList = [];
+                    for(let k=0;k<subSections.length;k++){
+                        const subsection = $(subSections[k]);
+                        let courses = subsection.find('.xnsl-components-container .xn-component-item-container');   //각 차시 당 courses
+                        let courseList = [];
+                        for(let l=0;l<courses.length;l++){
+                            const course = $(courses[l]);
+                            let courseNameElem = course.find('.xnci-component-title').first();
+                            let isCompletedElem = course.find('.xnci-attendance-status').first();
+                            let deadLineDateStrElem = course.find('.xnci-date-container .top-value').first();
+                            let videoDurationElem = course.find('.xnci-video-duration').first();
+                            let itemTypeElem = course.find('.xnci-description-component-type').first();
+                            let courseName = courseNameElem.text();
+                            let isCompleted = isCompletedElem.text();
+                            let deadLineDateStr = deadLineDateStrElem.text();
+                            let videoDuration = videoDurationElem.text();
+                            let itemType = itemTypeElem.text();
+                            
+                            if(itemType == "MEDIA"){
+                                courseList.push({
+                                    name: courseName,
+                                    status: isCompleted,
+                                    deadLineDate: deadLineDateStr,
+                                    videoDuration: videoDuration,
+                                });
+                            }
+                        }
+                        subsectionList.push({
+                            indexStr: `${k+1}차시`,
+                            courses: courseList,
+                        });
+                    }
+                    sectionList.push({
+                        startDate: subsectionStartDate.getMilliseconds(),
+                        subsections: subsectionList,
+                    });
+                }
+
+                fetchData.push({
+                    subjectName: courseList[i].name,
+                    sections: sectionList,
+                });
+            }
+            callback(fetchData);
             break;
         case "assignments":
             //fetch uncompleted assignments list
@@ -267,12 +346,44 @@ exports.get_icampus_mirror_main_databundle = async function(section, callback){
             //fetch uncompleted assignments list
             break;
     }
+    
 }
 
 /* -------------------- Internal function -------------------- */
+async function login_icampus_account(id, pw){
+    icampusPage.on('dialog', async(dialog) => {
+        const message = dialog.message();
+        if(message.includes("사용자 인증에 실패하였습니다.")){
+            throw Error("Fatal Error!");
+        }
+    });
 
+    await icampusPage.goto(icampusUrlBundle.login);
+    await icampusPage.evaluate((id, pw) => {
+        document.querySelector('input[name="login_user_id"]').value = id;
+        document.querySelector('input[name="login_user_password"]').value = pw;
+    }, id, pw);
+    await icampusPage.click('button[id="btnLoginBtn"]');
+
+    await icampusPage.waitForNavigation();
+}
 
 /* -------------------- User function -------------------- */
+function parseDateString(str){
+    //4월 5일 오후 12:23
+    let now = new Date();    
+    let seg = str.split(' ');
+    let mon = seg[0].replace('월', '');
+    let day = seg[1].replace('일', '');
+    let noonSpt = seg[2]=="오후";
+    let timeSeg = seg[3].split(':');
+    let hour = parseInt(timeSeg[0]);
+    hour = hour == 12 ? 0 : hour;
+    if(noonSpt) hour += 12;
+    let min = parseInt(timeSeg[1]);
+    let selectedDate = new Date(`${now.getFullYear()}-${mon}-${day} ${hour}:${min}`);
+    return selectedDate;
+}
 
 function getCurrentDate(){
     const now = new Date();
