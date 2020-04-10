@@ -43,7 +43,7 @@
                     if(updateCourseRemainTimer != null) clearInterval(updateCourseRemainTimer);
 
                     fetchedData.forEach(subject => {
-                        subject.sections.forEach(section => {
+                        subject.sections.forEach((section, section_ind) => {
                             section.subsections.forEach(subsection => {
                                 subsection.courses.forEach(course => {
                                     if(
@@ -56,6 +56,8 @@
                                             alreadyPass: pass,
                                             duration: course.videoDuration,
                                             deadline: course.deadLineDate,
+                                            subjectname: subject.subjectName,
+                                            sectionIndex: section_ind,
                                         });
                                         if(!pass) selectedCourseNum++;
                                     }
@@ -69,6 +71,7 @@
                             </div>
                         `;
                     $('#info_bundle_display_wrapper').append(seg);
+                    console.log(courseList);
                     courseList.sort((a,b)=>{
                         let aX = parseInt(a.deadline);
                         let bX = parseInt(b.deadline)
@@ -88,9 +91,9 @@
                             `);
                         }
                     });
-
+                    
                     updateCourseRemainTimer = setInterval(updateCourseRemainTime, 1000);
-                    console.log(courseList);
+                    
                 break;
             }
             console.log(fetchedData);

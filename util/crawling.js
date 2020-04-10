@@ -303,6 +303,7 @@ exports.get_icampus_mirror_main_databundle = async function(section, studentInfo
                                 let deadLineDate = parseDateString(deadLineDateStr);
                                 let videoDuration = videoDurationElem.text();
                             
+                                console.log(courseList);
                                 courseList.push({
                                     name: courseName,
                                     status: isCompleted,
