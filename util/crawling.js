@@ -274,7 +274,7 @@ exports.get_icampus_mirror_main_databundle = async function(section, studentInfo
     switch(section){
         case "courses":
             //fetch uncompleted courses list
-            for(let i=1;i<2;i++){
+            for(let i=0;i<courseList.length;i++){
                 let requestURL = `https://canvas.skku.edu/courses/${courseList[i].id}/external_tools/1`;
                 await icampusPage.goto(requestURL);  
                 await icampusPage.waitFor(500);              
@@ -327,7 +327,7 @@ exports.get_icampus_mirror_main_databundle = async function(section, studentInfo
                         });
                     }
                     sectionList.push({
-                        startDate: subsectionStartDate.getMilliseconds(),
+                        startDate: subsectionStartDate.getMilliseconds(),   //0 나오는 오류 고칠것
                         subsections: subsectionList,
                     });
                 }
