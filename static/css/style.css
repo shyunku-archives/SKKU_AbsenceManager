@@ -389,3 +389,29 @@ body{
     height: 100px;
     /* border: 1px solid red; */
 }
+
+.course-item{
+    display: inline-block;
+    width: 100%;
+    background: rgb(29, 29, 29);
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 10px 15px;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+}
+
+.course-name{
+    font-size: 1.6em;
+}
+
+.course-duration{
+    font-size: 0.9em;
+    color: rgb(99, 99, 99);
+}
+
+.course-remain-time{
+    float: right;
+    font-size: 1.6em;
+    color: red;
+}

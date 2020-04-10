@@ -29,6 +29,47 @@ function pad(stri, len){
     return str;
 }
 
+function getTimeFormat(diff){
+    if(diff<0) diff = -diff;
+    let days = parseInt(diff/(3600*24))
+    let hours = parseInt((diff%(3600*24))/3600);
+    let mins = parseInt((diff%3600)/60);
+    let secs = parseInt(diff%60);
+    return {
+        d: days,
+        h: hours,
+        m: mins,
+        s: secs,
+    }
+}
+
+function getTimeFormatString(diff){
+    let format = getTimeFormat(diff);
+    let dayStr = format.d + "일 ";
+    let hourStr = format.h + "시간 ";
+    let minStr = format.m + "분 ";
+    let secStr = format.s + "초";
+
+    let finalStr = "";
+    let connect = false;
+    if(format.d > 0){
+        finalStr += dayStr;
+        connect = true;
+    }
+    if(format.h > 0 || connect){
+        finalStr += hourStr;
+        connect = true;
+    }
+    if(format.m > 0 || connect){
+        finalStr += minStr;
+        connect = true;
+    }
+    finalStr += secStr;
+
+    return finalStr;
+}
+
+
 Date.prototype.isValid = function(){
     //is not perfect validation check function
     //e.g) 4.31 -> automatically changed to 5.1

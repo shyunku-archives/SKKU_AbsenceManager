@@ -15,26 +15,97 @@
                         <span class="form-item-name block-span">raw data</span>
                     </div>
                 </div>
-                <div class="form-wrapper">
+                <div class="form-wrapper" id="info_bundle_display_wrapper">
                     <div class="menu-selector-wrapper">
-                        <span class="selected">Courses</span>
-                        <span>Assignments</span>
-                        <span>Announcements</span>
+                        <span class="menu-upper-tab" id="courses_tab">Courses</span>
+                        <span class="menu-upper-tab" id="assignments_tab">Assignments</span>
+                        <span class="menu-upper-tab" id="announcement_tab">Announcements</span>
                     </div>
                     <hr>
-                    <span class="form-title">수업 15개 남음</span>
-                    <div class="form-in-row">
-                        <span class="form-item-name block-span">Contact to dev. Shyunku</span>
-                        <span class="form-item-name block-span">whdudgns7321@gmalil.com</span>
-                    </div>
                 </div>
             </div>
         </div>
         <%- include("parts/common_left_sidemenu.ejs") %>
         <script>
             let fetchedData = convertRawJson("<%= data %>");
+            let selectedCourses 
             let section = "<%= section %>";
+            let now = new Date();
+            let updateCourseRemainTimer = null;
+
+            $('.menu-upper-tab').removeClass('selected');
+
+            switch(section){
+                case "courses":
+                    $('#courses_tab').addClass('selected');
+                    let courseList = [];
+                    let selectedCourseNum = 0;
+                    if(updateCourseRemainTimer != null) clearInterval(updateCourseRemainTimer);
+
+                    fetchedData.forEach(subject => {
+                        subject.sections.forEach(section => {
+                            section.subsections.forEach(subsection => {
+                                subsection.courses.forEach(course => {
+                                    if(
+                                        section.startDate < now.getTime() &&
+                                        course.status != "출석"
+                                        ){
+                                        let pass = course.deadLineDate < now.getTime();
+                                        courseList.push({
+                                            name: course.name,
+                                            alreadyPass: pass,
+                                            duration: course.videoDuration,
+                                            deadline: course.deadLineDate,
+                                        });
+                                        if(!pass) selectedCourseNum++;
+                                    }
+                                });
+                            });
+                        });
+                    });
+                    let seg = `
+                            <span class="form-title" id="remained_course_num">수업 ${selectedCourseNum}개 남음</span>
+                            <div class="form-in-row" id="remained_course_list">
+                            </div>
+                        `;
+                    $('#info_bundle_display_wrapper').append(seg);
+                    courseList.sort((a,b)=>{
+                        let aX = parseInt(a.deadline);
+                        let bX = parseInt(b.deadline)
+                        return aX>bX?1:(aX<bX?-1:0);
+                    });
+
+                    let courseNotPassedIndex = 0;
+                    courseList.forEach((course, index) =>{
+                        if(!course.alreadyPass){
+                            $('#remained_course_list').append(`
+                            <div class="course-item">
+                                <span class="course-name">${course.name}</span>
+                                <span class="course-duration">${course.duration}</span>
+                                <span class="course-remain-time" id="course_remain_time_${courseNotPassedIndex}">- 남음</span>
+                                <input type="hidden" value="${course.deadline}" id="course_deadline_${courseNotPassedIndex++}">
+                            </div>
+                            `);
+                        }
+                    });
+
+                    updateCourseRemainTimer = setInterval(updateCourseRemainTime, 1000);
+                    console.log(courseList);
+                break;
+            }
             console.log(fetchedData);
+
+            function updateCourseRemainTime(){
+                let remain_course_list = $('.course-item');
+                let now = new Date();
+                remain_course_list.each((ind) => {
+                    let deadlineStr = $('#course_deadline_'+ind).attr('value');
+                    let deadline = parseInt(deadlineStr);
+                    let diff = deadline - now.getTime();
+                    let diffSec = parseInt(diff/1000);
+                    $('#course_remain_time_'+ind).text(`${getTimeFormatString(diffSec)} 남음`);
+                });
+            }
         </script>
     </body>
 </html>

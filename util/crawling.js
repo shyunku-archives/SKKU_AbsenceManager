@@ -247,26 +247,12 @@ exports.authen_icampus_account = async function(verify_id, verify_pw, callback){
 }
 
 exports.get_icampus_mirror_main_databundle = async function(section, studentInfo, courseList, callback){
-    //page null test
-    if(icampusPage == null){
-        console.log("iCampus Page is null, Generate new one");
-        const browser = await puppeteer.launch({
-            headless: false,
-        });
-        icampusPage = await browser.newPage();
-        await icampusPage.setViewport({
-            width: 1920,
-            height: 1080
-        });
+    //session expired test
+    try{
+        await icampusPage.goto(icampusHomeURL);
+    }catch(err){
+        console.log("iCampus Page session is expired, Log in.");
         await login_icampus_account(studentInfo.id, studentInfo.pw);
-    }else{
-        //session expired test
-        try{
-            await icampusPage.goto(icampusHomeURL);
-        }catch(err){
-            console.log("iCampus Page session is expired, Log in.");
-            await login_icampus_account(studentInfo.id, studentInfo.pw);
-        }
     }
 
     let fetchData = [];
@@ -274,6 +260,8 @@ exports.get_icampus_mirror_main_databundle = async function(section, studentInfo
     switch(section){
         case "courses":
             //fetch uncompleted courses list
+            //탭 복제 후 async - promise로 시도해볼 것
+            console.log("course found: "+courseList.length);
             for(let i=0;i<courseList.length;i++){
                 let requestURL = `https://canvas.skku.edu/courses/${courseList[i].id}/external_tools/1`;
                 await icampusPage.goto(requestURL);  
@@ -285,8 +273,7 @@ exports.get_icampus_mirror_main_databundle = async function(section, studentInfo
                 });
                 let body = innerFrameContent;
                 let $ = cheerio.load(body);
-                let courseSections = $('.xncl-section-container .xn-section');
-
+                let courseSections = $('.xncl-section-container .xn-section');                                      //각 수업 당 sections
                 let sectionList = [];
                 for(let j=0;j<courseSections.length;j++){
                     const section = $(courseSections[j]);
@@ -301,22 +288,25 @@ exports.get_icampus_mirror_main_databundle = async function(section, studentInfo
                         let courseList = [];
                         for(let l=0;l<courses.length;l++){
                             const course = $(courses[l]);
-                            let courseNameElem = course.find('.xnci-component-title').first();
-                            let isCompletedElem = course.find('.xnci-attendance-status').first();
-                            let deadLineDateStrElem = course.find('.xnci-date-container .top-value').first();
-                            let videoDurationElem = course.find('.xnci-video-duration').first();
                             let itemTypeElem = course.find('.xnci-description-component-type').first();
-                            let courseName = courseNameElem.text();
-                            let isCompleted = isCompletedElem.text();
-                            let deadLineDateStr = deadLineDateStrElem.text();
-                            let videoDuration = videoDurationElem.text();
                             let itemType = itemTypeElem.text();
-                            
+
                             if(itemType == "MEDIA"){
+                                let courseNameElem = course.find('.xnci-component-title').first();
+                                let isCompletedElem = course.find('.xnci-attendance-status').first();
+                                let deadLineDateStrElem = course.find('.xnci-date-container .top-value').first();
+                                let videoDurationElem = course.find('.xnci-video-duration').first();
+                                
+                                let courseName = courseNameElem.text();
+                                let isCompleted = isCompletedElem.text();
+                                let deadLineDateStr = deadLineDateStrElem.text();
+                                let deadLineDate = parseDateString(deadLineDateStr);
+                                let videoDuration = videoDurationElem.text();
+                            
                                 courseList.push({
                                     name: courseName,
                                     status: isCompleted,
-                                    deadLineDate: deadLineDateStr,
+                                    deadLineDate: deadLineDate,
                                     videoDuration: videoDuration,
                                 });
                             }
@@ -327,11 +317,12 @@ exports.get_icampus_mirror_main_databundle = async function(section, studentInfo
                         });
                     }
                     sectionList.push({
-                        startDate: subsectionStartDate.getMilliseconds(),   //0 나오는 오류 고칠것
+                        startDate: subsectionStartDate,   //0 나오는 오류 고칠것
                         subsections: subsectionList,
                     });
                 }
 
+                console.log("fetched subject_"+(i+1));
                 fetchData.push({
                     subjectName: courseList[i].name,
                     sections: sectionList,
@@ -351,6 +342,12 @@ exports.get_icampus_mirror_main_databundle = async function(section, studentInfo
 
 /* -------------------- Internal function -------------------- */
 async function login_icampus_account(id, pw){
+    //page null test
+    if(icampusPage == null){
+        console.log("iCampus Page is null, Generate new one");
+        await generate_icampus_page();
+    }
+
     icampusPage.on('dialog', async(dialog) => {
         const message = dialog.message();
         if(message.includes("사용자 인증에 실패하였습니다.")){
@@ -358,7 +355,14 @@ async function login_icampus_account(id, pw){
         }
     });
 
-    await icampusPage.goto(icampusUrlBundle.login);
+    try{
+        await icampusPage.goto(icampusUrlBundle.login);
+    }catch(err){
+        console.log("Session closed!");
+        await generate_icampus_page();
+        await icampusPage.goto(icampusUrlBundle.login);
+    }
+
     await icampusPage.evaluate((id, pw) => {
         document.querySelector('input[name="login_user_id"]').value = id;
         document.querySelector('input[name="login_user_password"]').value = pw;
@@ -368,21 +372,37 @@ async function login_icampus_account(id, pw){
     await icampusPage.waitForNavigation();
 }
 
+async function generate_icampus_page(){
+    const browser = await puppeteer.launch({
+        headless: true,
+    });
+    icampusPage = await browser.newPage();
+    await icampusPage.setViewport({
+        width: 1920,
+        height: 1080
+    });
+}
+
 /* -------------------- User function -------------------- */
 function parseDateString(str){
     //4월 5일 오후 12:23
-    let now = new Date();    
-    let seg = str.split(' ');
-    let mon = seg[0].replace('월', '');
-    let day = seg[1].replace('일', '');
-    let noonSpt = seg[2]=="오후";
-    let timeSeg = seg[3].split(':');
-    let hour = parseInt(timeSeg[0]);
-    hour = hour == 12 ? 0 : hour;
-    if(noonSpt) hour += 12;
-    let min = parseInt(timeSeg[1]);
-    let selectedDate = new Date(`${now.getFullYear()}-${mon}-${day} ${hour}:${min}`);
-    return selectedDate;
+    try{
+        let now = new Date();    
+        let seg = str.split(' ');
+        let mon = seg[0].replace('월', '');
+        let day = seg[1].replace('일', '');
+        let noonSpt = seg[2]=="오후";
+        let timeSeg = seg[3].split(':');
+        let hour = parseInt(timeSeg[0]);
+        hour = hour == 12 ? 0 : hour;
+        if(noonSpt) hour += 12;
+        let min = parseInt(timeSeg[1]);
+        let selectedDate = new Date(`${now.getFullYear()}-${mon}-${day} ${hour}:${min}`);
+        return selectedDate.getTime();
+    }catch(err){
+        console.log(err);
+        return 0;
+    }
 }
 
 function getCurrentDate(){
