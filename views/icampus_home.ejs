@@ -12,7 +12,7 @@
                 <div class="form-wrapper">
                     <span class="form-title"><%= studentInfo.student_name %>(<%= studentInfo.student_id %>)님 환영합니다!</span>
                     <div class="form-in-row">
-                        <span class="form-item-name block-span">raw data</span>
+                        <!-- <span class="form-item-name block-span">raw data</span> -->
                     </div>
                 </div>
                 <div class="form-wrapper" id="info_bundle_display_wrapper">
@@ -79,8 +79,17 @@
                     });
 
                     let courseNotPassedIndex = 0;
+                    let subjectName = "";
                     courseList.forEach((course, index) =>{
                         if(!course.alreadyPass){
+                            if(subjectName != course.subjectname){
+                                subjectName = course.subjectname;
+                                $('#remained_course_list').append(`
+                                <div class="subject-tab-item">
+                                    <span class="subject-name">${subjectName}</span>
+                                </div>
+                            `);
+                            }
                             $('#remained_course_list').append(`
                             <div class="course-item">
                                 <span class="course-name">${course.name}</span>

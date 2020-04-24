@@ -391,9 +391,38 @@ body{
 }
 
 .course-item{
+    /* display: inline-block; */
+    float: right;
+    width: 97%;
+    background: rgb(29, 29, 29);
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 10px 15px;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+
+    font-family: 'Nanum Gothic', sans-serif;
+}
+
+.course-name{
+    font-size: 1.2em;
+}
+
+.course-duration{
+    font-size: 0.7em;
+    color: rgb(99, 99, 99);
+}
+
+.course-remain-time{
+    float: right;
+    font-size: 1.2em;
+    color: rgb(255, 47, 47);
+}
+
+.subject-tab-item{
     display: inline-block;
     width: 100%;
-    background: rgb(29, 29, 29);
+    background: rgb(0, 112, 17);
     border: 1px solid white;
     border-radius: 5px;
     padding: 10px 15px;
@@ -401,17 +430,6 @@ body{
     margin-bottom: 5px;
 }
 
-.course-name{
+.subject-name{
     font-size: 1.6em;
-}
-
-.course-duration{
-    font-size: 0.9em;
-    color: rgb(99, 99, 99);
-}
-
-.course-remain-time{
-    float: right;
-    font-size: 1.6em;
-    color: red;
 }

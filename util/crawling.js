@@ -265,7 +265,7 @@ exports.get_icampus_mirror_main_databundle = async function(section, studentInfo
             for(let i=0;i<courseList.length;i++){
                 let requestURL = `https://canvas.skku.edu/courses/${courseList[i].id}/external_tools/1`;
                 await icampusPage.goto(requestURL);  
-                await icampusPage.waitFor(500);              
+                await icampusPage.waitFor(500);                                 //최적화 필요
                 let innerFrameContent = await icampusPage.evaluate(() => {
                     let content = document.querySelector('#tool_content')
                         .contentDocument.documentElement.innerHTML;
@@ -303,7 +303,6 @@ exports.get_icampus_mirror_main_databundle = async function(section, studentInfo
                                 let deadLineDate = parseDateString(deadLineDateStr);
                                 let videoDuration = videoDurationElem.text();
                             
-                                console.log(courseList);
                                 courseList.push({
                                     name: courseName,
                                     status: isCompleted,
@@ -318,7 +317,7 @@ exports.get_icampus_mirror_main_databundle = async function(section, studentInfo
                         });
                     }
                     sectionList.push({
-                        startDate: subsectionStartDate,   //0 나오는 오류 고칠것
+                        startDate: subsectionStartDate,
                         subsections: subsectionList,
                     });
                 }
