@@ -331,6 +331,32 @@ exports.get_icampus_mirror_main_databundle = async function(section, studentInfo
             callback(fetchData);
             break;
         case "assignments":
+            for(let i=0;i<courseList.length;i++){
+                let requestURL = `https://canvas.skku.edu/courses/${courseList[i].id}/assignments`;
+                await icampusPage.goto(requestURL);  
+                await icampusPage.waitFor(500);                                 //최적화 필요
+                let innerContent = await icampusPage.evaluate(() => {
+                    let content = document.querySelector('#assignment_group_upcoming_assignments');
+                    return content;
+                });
+                let body = innerContent;
+                if(body == null) continue;  // 다 스킵되는 오류 수정해야함
+                let $ = cheerio.load(body);
+                let assignmentSections = $('li.assignment');                                                //각 수업 당 과제 items
+                console.log(assignmentSections.length);
+                let assignmentList = [];
+                for(let j=0;j<assignmentSections.length;j++){
+                    const section = $(assignmentSections[j]);
+                    let title = section.find('.ig-title').first();
+                    console.log(title.text());
+                    
+                    sectionList.push({
+                    });
+                }
+                fetchData.push({
+                });
+            }
+            callback(fetchData);
             //fetch uncompleted assignments list
             break;
         case "Announcements":
@@ -374,7 +400,7 @@ async function login_icampus_account(id, pw){
 
 async function generate_icampus_page(){
     const browser = await puppeteer.launch({
-        headless: true,
+        headless: false,
     });
     icampusPage = await browser.newPage();
     await icampusPage.setViewport({

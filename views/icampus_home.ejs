@@ -17,18 +17,22 @@
                 </div>
                 <div class="form-wrapper" id="info_bundle_display_wrapper">
                     <div class="menu-selector-wrapper">
+                        <span class="menu-upper-tab" id="main_tab">Main</span>
                         <span class="menu-upper-tab" id="courses_tab">Courses</span>
                         <span class="menu-upper-tab" id="assignments_tab">Assignments</span>
-                        <span class="menu-upper-tab" id="announcement_tab">Announcements</span>
+                        <span class="menu-upper-tab" id="announcements_tab">Announcements</span>
                     </div>
                     <hr>
                 </div>
             </div>
         </div>
         <%- include("parts/common_left_sidemenu.ejs") %>
+        <script src="js/icampus.js"></script>
         <script>
-            let fetchedData = convertRawJson("<%= data %>");
-            let selectedCourses 
+            let fetchedData = null;
+            <% if(locals.data){ %>
+                fetchedData = convertRawJson("<%= data %>");
+            <% } %>
             let section = "<%= section %>";
             let now = new Date();
             let updateCourseRemainTimer = null;
@@ -36,6 +40,9 @@
             $('.menu-upper-tab').removeClass('selected');
 
             switch(section){
+                case "main":
+                    $('#main_tab').addClass('selected');
+                    break;
                 case "courses":
                     $('#courses_tab').addClass('selected');
                     let courseList = [];
@@ -103,6 +110,9 @@
                     
                     updateCourseRemainTimer = setInterval(updateCourseRemainTime, 1000);
                     
+                break;
+            case "assignments":
+                $('#assignments_tab').addClass('selected');
                 break;
             }
             console.log(fetchedData);

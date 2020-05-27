@@ -36,20 +36,30 @@ app.get('/account-icampus', (req, res) => {
 
 app.get('/icampus', (req, res) => {
     let section = req.query.section;
-    if(section == undefined)section = "courses";
-    fm.fetch_icampus_account_info((res2)=>{
-        fm.fetch_icampus_course_info((res3)=>{
-            let student_info = res2;
-            let course_list = res3;
-            crawl.get_icampus_mirror_main_databundle(section, student_info, course_list, function(data){
-                res.render('icampus_home',{
-                    studentInfo: student_info,
-                    data: JSON.stringify(data),
-                    section: section,
+    if(section == undefined)section = "main";
+    
+    if(section == "main"){
+        fm.fetch_icampus_account_info((res2)=>{
+            res.render('icampus_home',{
+                studentInfo: res2,
+                section: section,
+            });
+        });
+    }else{
+        fm.fetch_icampus_account_info((res2)=>{
+            fm.fetch_icampus_course_info((res3)=>{
+                let student_info = res2;
+                let course_list = res3;
+                crawl.get_icampus_mirror_main_databundle(section, student_info, course_list, function(data){
+                    res.render('icampus_home',{
+                        studentInfo: student_info,
+                        data: JSON.stringify(data),
+                        section: section,
+                    });
                 });
             });
         });
-    });
+    }
 });
 
 app.get('/subject', (req, res) => {
