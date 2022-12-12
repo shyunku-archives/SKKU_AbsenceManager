@@ -5,7 +5,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "ejs": "^3.0.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "node-java": "^1.0.1",
     "puppeteer": "^2.1.1",
     "serve-favicon": "^2.5.0"
